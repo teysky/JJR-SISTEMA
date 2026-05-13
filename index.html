@@ -1212,6 +1212,7 @@
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toast-container"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ═══════════════════════════════════════════════════════════
 //  DATA LAYER
@@ -1266,12 +1267,35 @@ const DEFAULT_ESTOQUE = [
   { id: 15, nome: 'Tampa', key: 'tampa', qtd: 200, unidade: 'unidades', minimo: 30 }
 ];
 
+const SUPABASE_URL = 'https://rlatcatgaixsokwjohlh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable__ihSLBn_VXllrXmLDI4efg_X5v5ivyD';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 function loadData(key, def) {
   try { return JSON.parse(localStorage.getItem('jjr_' + key)) ?? def; }
   catch { return def; }
 }
+
+async function loadCloudData() {
+  try {
+    const keys = ['pedidos', 'estoque', 'despesas', 'nextPedidoId', 'nextEstoqueId', 'nextDespesaId'];
+    const { data, error } = await db.from('jjr_store').select('key,value').in('key', keys);
+    if (error) throw error;
+    (data || []).forEach(row => {
+      localStorage.setItem('jjr_' + row.key, JSON.stringify(row.value));
+    });
+  } catch (err) {
+    console.error('Erro ao carregar dados do Supabase:', err);
+  }
+}
+
 function saveData(key, val) {
   localStorage.setItem('jjr_' + key, JSON.stringify(val));
+  db.from('jjr_store')
+    .upsert({ key, value: val, updated_at: new Date().toISOString() })
+    .then(({ error }) => {
+      if (error) console.error('Erro ao salvar no Supabase:', error);
+    });
 }
 
 let pedidos = loadData('pedidos', []);
@@ -1845,7 +1869,18 @@ document.getElementById('desp-data').valueAsDate = new Date();
 // ═══════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════
-renderAll();
+async function initApp() {
+  await loadCloudData();
+  pedidos = loadData('pedidos', []);
+  estoque = loadData('estoque', DEFAULT_ESTOQUE);
+  despesas = loadData('despesas', []);
+  nextPedidoId = loadData('nextPedidoId', 1);
+  nextEstoqueId = loadData('nextEstoqueId', 16);
+  nextDespesaId = loadData('nextDespesaId', 1);
+  renderAll();
+}
+
+initApp();
 </script>
 </body>
 </html>
