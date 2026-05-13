@@ -791,6 +791,21 @@
 </head>
 <body>
 
+<div id="login-screen" style="position:fixed;inset:0;background:#0d0814;display:flex;align-items:center;justify-content:center;z-index:9999;">
+  <div style="background:#160f22;padding:32px;border-radius:16px;width:90%;max-width:400px;border:1px solid #2e2245;">
+    <h2 style="color:white;margin-bottom:20px;font-family:sans-serif;">Login — JJR Sistema</h2>
+    <input type="email" id="login-email" placeholder="Email"
+      style="width:100%;padding:12px;margin-bottom:12px;background:#1e1530;border:1px solid #2e2245;color:white;border-radius:8px;">
+    <input type="password" id="login-password" placeholder="Senha"
+      style="width:100%;padding:12px;margin-bottom:16px;background:#1e1530;border:1px solid #2e2245;color:white;border-radius:8px;">
+    <button onclick="login()" 
+      style="width:100%;padding:12px;background:#7c3aed;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;">
+      Entrar
+    </button>
+  </div>
+</div>
+
+
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="logo">
@@ -1315,6 +1330,37 @@ let despesas = loadData('despesas', []);
 let nextPedidoId = loadData('nextPedidoId', 1);
 let nextEstoqueId = loadData('nextEstoqueId', 16);
 let nextDespesaId = loadData('nextDespesaId', 1);
+
+async function login() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  const { error } = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    location.reload();
+  }
+}
+
+async function checkAuth() {
+  const { data } = await db.auth.getSession();
+
+  if (!data.session) {
+    document.querySelector('.main').style.display = 'none';
+    document.querySelector('.sidebar').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+  } else {
+    document.getElementById('login-screen').style.display = 'none';
+  }
+}
+
+checkAuth();
+
 
 // ═══════════════════════════════════════════════════════════
 //  ORDER STATE
