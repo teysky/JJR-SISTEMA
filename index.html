@@ -777,6 +777,67 @@
   .empty-text { font-size: 15px; font-weight: 500; margin-bottom: 4px; color: var(--text2); }
   .empty-sub { font-size: 13px; }
 
+
+
+  /* ── LOGIN ── */
+  .login-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: radial-gradient(ellipse at top, rgba(124,58,237,0.25), transparent 55%), var(--bg);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .login-logo {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--purple), var(--accent));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 14px;
+  }
+
+  .login-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .login-subtitle {
+    color: var(--text3);
+    font-size: 13px;
+    margin-bottom: 22px;
+  }
+
+  .logout-btn {
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .logout-btn:hover { color: var(--text); border-color: var(--purple); }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     .sidebar { display: none; }
@@ -790,6 +851,30 @@
 </style>
 </head>
 <body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🍇</div>
+    <div class="login-title">JJR Sistema</div>
+    <div class="login-subtitle">Entre para acessar o sistema da loja.</div>
+
+    <div class="form-group">
+      <div class="form-label">Email</div>
+      <input type="email" class="form-control" id="login-email" placeholder="seuemail@exemplo.com" autocomplete="email">
+    </div>
+
+    <div class="form-group">
+      <div class="form-label">Senha</div>
+      <input type="password" class="form-control" id="login-password" placeholder="Digite sua senha" autocomplete="current-password" onkeydown="if(event.key==='Enter') login()">
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="login()">
+      Entrar
+    </button>
+  </div>
+</div>
+
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
@@ -839,6 +924,7 @@
         <div class="status-dot"></div>
         Loja Aberta
       </div>
+      <button class="logout-btn" onclick="logout()">Sair</button>
     </div>
   </div>
 
@@ -1271,6 +1357,43 @@ const DEFAULT_ESTOQUE = [
 const SUPABASE_URL = 'https://rlatcatgaixsokwjohlh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsYXRjYXRnYWl4c29rd2pvaGxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NTkzMzMsImV4cCI6MjA5NDIzNTMzM30.Cz4XOebXi065g1hzf4xIXwZ8UMIy2o_EQG8_yBb8dTI';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function login() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  if (!email || !password) {
+    alert('Preencha email e senha.');
+    return;
+  }
+
+  const { error } = await db.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    alert('Erro no login: ' + error.message);
+    return;
+  }
+
+  await initApp();
+}
+
+async function logout() {
+  await db.auth.signOut();
+  location.reload();
+}
+
+function showLoginScreen() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.querySelector('.sidebar').style.display = 'none';
+  document.querySelector('.main').style.display = 'none';
+}
+
+function showAppScreen() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.querySelector('.sidebar').style.display = '';
+  document.querySelector('.main').style.display = '';
+}
+
 
 function loadData(key, def) {
   try { return JSON.parse(localStorage.getItem('jjr_' + key)) ?? def; }
@@ -1881,6 +2004,14 @@ document.getElementById('desp-data').valueAsDate = new Date();
 //  INIT
 // ═══════════════════════════════════════════════════════════
 async function initApp() {
+  const { data } = await db.auth.getSession();
+
+  if (!data.session) {
+    showLoginScreen();
+    return;
+  }
+
+  showAppScreen();
   await loadCloudData();
   pedidos = loadData('pedidos', []);
   estoque = loadData('estoque', DEFAULT_ESTOQUE);
