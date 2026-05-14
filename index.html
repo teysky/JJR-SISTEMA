@@ -829,6 +829,11 @@
       <span>Estoque</span>
       <span class="nav-badge" id="badge-estoque" style="background:var(--red);display:none">!</span>
     </div>
+    <div class="nav-item" onclick="navigate('validades')">
+      <span class="nav-icon">⏰</span>
+      <span>Validades</span>
+      <span class="nav-badge" id="badge-validades" style="background:var(--yellow);display:none">!</span>
+    </div>
     <div class="nav-item" onclick="navigate('caixa')">
       <span class="nav-icon">💰</span>
       <span>Caixa</span>
@@ -958,12 +963,26 @@
             </div>
             <div class="form-group" style="margin:0">
               <div class="form-label">Pagamento</div>
-              <select class="form-control" id="pgto-select">
+              <select class="form-control" id="pgto-select" onchange="toggleTrocoArea()">
                 <option value="dinheiro">💵 Dinheiro</option>
                 <option value="pix">📱 PIX</option>
                 <option value="debito">💳 Débito</option>
                 <option value="credito">💳 Crédito</option>
               </select>
+            </div>
+          
+</div>
+
+          <div id="troco-area" style="margin-top:12px">
+            <div class="grid-2" style="gap:12px">
+              <div class="form-group" style="margin:0">
+                <div class="form-label">Valor Recebido</div>
+                <input type="number" class="form-control" id="valor-recebido" placeholder="0,00" min="0" step="0.01" oninput="calcTroco()">
+              </div>
+              <div class="form-group" style="margin:0">
+                <div class="form-label">Troco</div>
+                <input type="text" class="form-control" id="troco-display" value="R$ 0,00" readonly>
+              </div>
             </div>
           </div>
 
@@ -1019,6 +1038,105 @@
           </thead>
           <tbody id="tabela-estoque"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- ══ VALIDADES ══ -->
+    <div class="page" id="page-validades">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Validades por Lote</div>
+          <div style="font-size:13px;color:var(--text3);margin-top:4px">Controle produtos iguais com compras e vencimentos diferentes.</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">Adicionar Lote</div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">Produto</div>
+            <select class="form-control" id="lote-produto"></select>
+          </div>
+
+          <div class="grid-2" style="gap:12px">
+            <div class="form-group" style="margin:0">
+              <div class="form-label">Nome do lote</div>
+              <input type="text" class="form-control" id="lote-nome" placeholder="Ex: Lote 1, Coca fevereiro">
+            </div>
+            <div class="form-group" style="margin:0">
+              <div class="form-label">Quantidade</div>
+              <input type="number" class="form-control" id="lote-qtd" min="0" step="0.01" placeholder="0">
+            </div>
+          </div>
+
+          <div class="grid-2" style="gap:12px;margin-top:12px">
+            <div class="form-group" style="margin:0">
+              <div class="form-label">Data da compra</div>
+              <input type="date" class="form-control" id="lote-compra">
+            </div>
+            <div class="form-group" style="margin:0">
+              <div class="form-label">Data de validade</div>
+              <input type="date" class="form-control" id="lote-validade">
+            </div>
+          </div>
+
+          <div class="grid-2" style="gap:12px;margin-top:12px">
+            <div class="form-group" style="margin:0">
+              <div class="form-label">Avisar quantos dias antes?</div>
+              <input type="number" class="form-control" id="lote-alerta" min="0" step="1" value="7">
+            </div>
+            <div class="form-group" style="margin:0">
+              <div class="form-label">Unidade</div>
+              <input type="text" class="form-control" id="lote-unidade" placeholder="unidades, kg, litros">
+            </div>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:16px" onclick="addLoteValidade()">
+            + Salvar Lote
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🚨 Alertas de Validade</div>
+          <div id="alertas-validades" style="margin-top:12px">
+            <div class="empty-state" style="padding:24px">
+              <div class="empty-icon">✅</div>
+              <div class="empty-text">Nenhum item perto de vencer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-header">
+          <div class="section-title">Lotes Cadastrados</div>
+          <span id="count-lotes" class="badge badge-purple">0 lotes</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Lote</th>
+                <th>Qtd</th>
+                <th>Compra</th>
+                <th>Validade</th>
+                <th>Alerta</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-validades"></tbody>
+          </table>
+        </div>
+        <div id="empty-validades" class="empty-state" style="display:none">
+          <div class="empty-icon">⏰</div>
+          <div class="empty-text">Nenhum lote cadastrado</div>
+          <div class="empty-sub">Adicione lotes com datas de validade para receber alertas.</div>
+        </div>
       </div>
     </div>
 
@@ -1294,7 +1412,7 @@ function loadData(key, def) {
 
 async function loadCloudData() {
   try {
-    const keys = ['pedidos', 'estoque', 'despesas', 'nextPedidoId', 'nextEstoqueId', 'nextDespesaId'];
+    const keys = ['pedidos', 'estoque', 'despesas', 'lotesValidade', 'nextPedidoId', 'nextEstoqueId', 'nextDespesaId', 'nextLoteId'];
     const { data, error } = await db.from('jjr_store').select('key,value').in('key', keys);
     if (error) throw error;
     (data || []).forEach(row => {
@@ -1327,9 +1445,11 @@ function saveData(key, val) {
 let pedidos = loadData('pedidos', []);
 let estoque = loadData('estoque', DEFAULT_ESTOQUE);
 let despesas = loadData('despesas', []);
+let lotesValidade = loadData('lotesValidade', []);
 let nextPedidoId = loadData('nextPedidoId', 1);
 let nextEstoqueId = loadData('nextEstoqueId', 16);
 let nextDespesaId = loadData('nextDespesaId', 1);
+let nextLoteId = loadData('nextLoteId', 1);
 
 async function login() {
   const email = document.getElementById('login-email').value;
@@ -1360,6 +1480,7 @@ async function checkAuth() {
 }
 
 checkAuth();
+setTimeout(toggleTrocoArea, 100);
 
 
 // ═══════════════════════════════════════════════════════════
@@ -1395,6 +1516,31 @@ function calcTotal() {
   return total;
 }
 
+
+function toggleTrocoArea() {
+  const pgto = document.getElementById('pgto-select').value;
+  document.getElementById('troco-area').style.display =
+    pgto === 'dinheiro' ? 'block' : 'none';
+
+  calcTroco();
+}
+
+function calcTroco() {
+  const pgto = document.getElementById('pgto-select').value;
+
+  if (pgto !== 'dinheiro') {
+    document.getElementById('troco-display').value = 'R$ 0,00';
+    return;
+  }
+
+  const recebido = parseFloat(document.getElementById('valor-recebido').value) || 0;
+  const total = calcTotal();
+  const troco = recebido - total;
+
+  document.getElementById('troco-display').value =
+    troco >= 0 ? fmt(troco) : 'Valor insuficiente';
+}
+
 // ═══════════════════════════════════════════════════════════
 //  ADD PEDIDO
 // ═══════════════════════════════════════════════════════════
@@ -1403,6 +1549,13 @@ function addPedido() {
   const qtd = parseInt(document.getElementById('qtd-input').value) || 1;
   const pgto = document.getElementById('pgto-select').value;
   const total = calcTotal();
+  const valorRecebido = pgto === 'dinheiro' ? (parseFloat(document.getElementById('valor-recebido').value) || 0) : total;
+  const troco = pgto === 'dinheiro' ? Math.max(0, valorRecebido - total) : 0;
+
+  if (pgto === 'dinheiro' && valorRecebido < total) {
+    showToast('Valor recebido é menor que o total!', 'error');
+    return;
+  }
 
   const pedido = {
     id: nextPedidoId++,
@@ -1412,6 +1565,8 @@ function addPedido() {
     pgto,
     status: 'preparo',
     total,
+    valorRecebido,
+    troco,
     hora: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
     date: new Date().toLocaleDateString('pt-BR')
   };
@@ -1430,6 +1585,8 @@ function addPedido() {
   document.querySelectorAll('.adicional-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('qtd-input').value = 1;
   document.getElementById('total-display').textContent = 'R$ 0,00';
+  document.getElementById('valor-recebido').value = '';
+  document.getElementById('troco-display').value = 'R$ 0,00';
 
   renderAll();
   showToast('✅ Pedido #' + pedido.id + ' registrado!', 'success');
@@ -1643,6 +1800,165 @@ function deleteEstoque(id) {
   saveData('estoque', estoque);
   renderAll();
   showToast('Item removido', 'error');
+}
+
+
+// ═══════════════════════════════════════════════════════════
+//  VALIDADES POR LOTE
+// ═══════════════════════════════════════════════════════════
+function toDateOnly(dateStr) {
+  if (!dateStr) return null;
+  const [y, m, d] = dateStr.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function diasAteValidade(dateStr) {
+  const validade = toDateOnly(dateStr);
+  if (!validade) return 999999;
+  const hoje = new Date();
+  const hojeLimpo = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  return Math.ceil((validade - hojeLimpo) / (1000 * 60 * 60 * 24));
+}
+
+function getValidadeStatus(lote) {
+  const dias = diasAteValidade(lote.validade);
+  const alerta = parseInt(lote.alertaDias) || 0;
+  if (dias < 0) return { label: 'Vencido', badge: 'badge-red', texto: `Venceu há ${Math.abs(dias)} dia(s)` };
+  if (dias === 0) return { label: 'Vence hoje', badge: 'badge-red', texto: 'Vence hoje' };
+  if (dias <= alerta) return { label: 'Perto de vencer', badge: 'badge-yellow', texto: `Vence em ${dias} dia(s)` };
+  return { label: 'No prazo', badge: 'badge-green', texto: `Vence em ${dias} dia(s)` };
+}
+
+function preencherProdutosLote() {
+  const select = document.getElementById('lote-produto');
+  if (!select) return;
+  const atual = select.value;
+  select.innerHTML = estoque.map(item => `<option value="${item.key}" data-nome="${item.nome}" data-unidade="${item.unidade}">${item.nome}</option>`).join('');
+  if (atual) select.value = atual;
+
+  select.onchange = () => {
+    const opt = select.options[select.selectedIndex];
+    document.getElementById('lote-unidade').value = opt?.dataset?.unidade || '';
+  };
+  if (!document.getElementById('lote-unidade').value && select.options.length) {
+    document.getElementById('lote-unidade').value = select.options[select.selectedIndex].dataset.unidade || '';
+  }
+}
+
+function addLoteValidade() {
+  const produtoKey = document.getElementById('lote-produto').value;
+  const opt = document.getElementById('lote-produto').options[document.getElementById('lote-produto').selectedIndex];
+  const produtoNome = opt?.dataset?.nome || produtoKey;
+  const loteNome = document.getElementById('lote-nome').value.trim() || ('Lote ' + nextLoteId);
+  const qtd = parseFloat(document.getElementById('lote-qtd').value);
+  const unidade = document.getElementById('lote-unidade').value.trim() || opt?.dataset?.unidade || 'unidades';
+  const compra = document.getElementById('lote-compra').value;
+  const validade = document.getElementById('lote-validade').value;
+  const alertaDias = parseInt(document.getElementById('lote-alerta').value);
+
+  if (!produtoKey || isNaN(qtd) || qtd <= 0 || !compra || !validade || isNaN(alertaDias)) {
+    showToast('Preencha produto, quantidade, compra, validade e alerta.', 'error');
+    return;
+  }
+
+  lotesValidade.push({
+    id: nextLoteId++,
+    produtoKey,
+    produtoNome,
+    loteNome,
+    qtd,
+    unidade,
+    compra,
+    validade,
+    alertaDias
+  });
+
+  saveData('lotesValidade', lotesValidade);
+  saveData('nextLoteId', nextLoteId);
+
+  document.getElementById('lote-nome').value = '';
+  document.getElementById('lote-qtd').value = '';
+  document.getElementById('lote-validade').value = '';
+  document.getElementById('lote-alerta').value = 7;
+
+  renderAll();
+  showToast('Lote salvo com alerta de validade!', 'success');
+}
+
+function deleteLoteValidade(id) {
+  if (!confirm('Remover este lote?')) return;
+  lotesValidade = lotesValidade.filter(l => l.id !== id);
+  saveData('lotesValidade', lotesValidade);
+  renderAll();
+  showToast('Lote removido', 'error');
+}
+
+function renderValidades() {
+  preencherProdutosLote();
+
+  const tbody = document.getElementById('tabela-validades');
+  const empty = document.getElementById('empty-validades');
+  const count = document.getElementById('count-lotes');
+  const alertsBox = document.getElementById('alertas-validades');
+  const badge = document.getElementById('badge-validades');
+  if (!tbody) return;
+
+  count.textContent = lotesValidade.length + ' lote(s)';
+
+  const ordenados = [...lotesValidade].sort((a, b) => diasAteValidade(a.validade) - diasAteValidade(b.validade));
+  const alertas = ordenados.filter(l => {
+    const st = getValidadeStatus(l);
+    return st.label === 'Vencido' || st.label === 'Vence hoje' || st.label === 'Perto de vencer';
+  });
+
+  if (badge) {
+    if (alertas.length) {
+      badge.textContent = alertas.length;
+      badge.style.display = 'flex';
+      badge.style.background = alertas.some(l => diasAteValidade(l.validade) <= 0) ? 'var(--red)' : 'var(--yellow)';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  alertsBox.innerHTML = alertas.length
+    ? alertas.slice(0, 6).map(l => {
+        const st = getValidadeStatus(l);
+        return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-weight:700;color:var(--text)">${l.produtoNome}</div>
+            <div style="font-size:12px;color:var(--text3)">${l.loteNome} · validade ${formatDateBR(l.validade)}</div>
+          </div>
+          <span class="badge ${st.badge}">${st.texto}</span>
+        </div>`;
+      }).join('')
+    : `<div class="empty-state" style="padding:24px"><div class="empty-icon">✅</div><div class="empty-text">Nenhum item perto de vencer</div></div>`;
+
+  if (!ordenados.length) {
+    tbody.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  tbody.innerHTML = ordenados.map(l => {
+    const st = getValidadeStatus(l);
+    return `<tr>
+      <td style="font-weight:600;color:var(--text)">${l.produtoNome}</td>
+      <td>${l.loteNome}</td>
+      <td>${Number(l.qtd).toFixed(2)} ${l.unidade}</td>
+      <td>${formatDateBR(l.compra)}</td>
+      <td>${formatDateBR(l.validade)}</td>
+      <td>${l.alertaDias} dia(s) antes</td>
+      <td><span class="badge ${st.badge}">${st.texto}</span></td>
+      <td><button class="btn btn-danger btn-xs" onclick="deleteLoteValidade(${l.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function formatDateBR(dateStr) {
+  const d = toDateOnly(dateStr);
+  return d ? d.toLocaleDateString('pt-BR') : '-';
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1863,7 +2179,7 @@ function renderDashboard() {
 // ═══════════════════════════════════════════════════════════
 //  NAVIGATION
 // ═══════════════════════════════════════════════════════════
-const pageNames = { dashboard: 'Dashboard', pedidos: 'Pedidos', estoque: 'Estoque', caixa: 'Caixa & Financeiro', relatorios: 'Relatórios' };
+const pageNames = { dashboard: 'Dashboard', pedidos: 'Pedidos', estoque: 'Estoque', validades: 'Validades', caixa: 'Caixa & Financeiro', relatorios: 'Relatórios' };
 
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1904,6 +2220,7 @@ function renderAll() {
   renderDashboard();
   renderPedidos();
   renderEstoque();
+  renderValidades();
   renderCaixa();
   renderRelatorios();
 }
@@ -1922,6 +2239,7 @@ updateClock();
 
 // Set today's date on despesa form
 document.getElementById('desp-data').valueAsDate = new Date();
+if (document.getElementById('lote-compra')) document.getElementById('lote-compra').valueAsDate = new Date();
 
 // ═══════════════════════════════════════════════════════════
 //  INIT
@@ -1931,9 +2249,11 @@ async function initApp() {
   pedidos = loadData('pedidos', []);
   estoque = loadData('estoque', DEFAULT_ESTOQUE);
   despesas = loadData('despesas', []);
+  lotesValidade = loadData('lotesValidade', []);
   nextPedidoId = loadData('nextPedidoId', 1);
   nextEstoqueId = loadData('nextEstoqueId', 16);
   nextDespesaId = loadData('nextDespesaId', 1);
+  nextLoteId = loadData('nextLoteId', 1);
   renderAll();
 }
 
