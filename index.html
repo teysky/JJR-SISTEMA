@@ -1080,6 +1080,29 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
 @media(max-width:900px){.sidebar{display:none}.topbar{padding:0 16px}.premium-search,.icon-top,.profile-mini{display:none}.premium-dashboard-grid,.premium-bottom-grid,.grid-4,.grid-3,.grid-2,.grid-12{grid-template-columns:1fr}.content{padding:18px 16px}.action-grid,.product-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.premium-welcome span{display:none}.topbar-action{padding:0 14px}.action-grid,.product-grid,.mini-stats,.price-grid{grid-template-columns:1fr}.dash-value,.premium-chart-value{font-size:24px}}
 
+
+
+  /* ── CARDÁPIO / TOPBAR / NAV DRAG ── */
+  .nav-item { user-select:none; }
+  .nav-item.dragging { opacity:.45; transform:scale(.98); }
+  .nav-item .drag-handle { margin-left:auto; color:rgba(255,255,255,.35); cursor:grab; font-size:13px; }
+  .nav-item .drag-handle:active { cursor:grabbing; }
+  .settings-note {
+    background: rgba(124,58,237,0.10);
+    border: 1px solid rgba(124,58,237,0.25);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    color: var(--text2);
+    margin-bottom: 18px;
+    font-size: 14px;
+  }
+  .premium-search input:focus { outline:none; }
+  .icon-top { cursor:pointer; }
+  .cardapio-item-name { display:flex;align-items:center;gap:10px;font-weight:800;color:var(--text); }
+  .cardapio-emoji { width:34px;height:34px;display:grid;place-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:11px; }
+  .size-btn.disabled, .adicional-btn.disabled { opacity:.45; pointer-events:none; }
+  @media(max-width:900px){ .sidebar.mobile-open{display:flex;position:fixed;left:0;top:0;bottom:0;width:280px;z-index:80;box-shadow:20px 0 60px rgba(0,0,0,.35)} }
+
 </style>
 </head>
 <body>
@@ -1107,39 +1130,7 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
     <div class="logo-sub">SISTEMA</div></div>
   </div>
 
-  <nav class="nav">
-    <div class="nav-item active" onclick="navigate('dashboard')">
-      <span class="nav-icon">🏠</span>
-      <span>Dashboard</span>
-    </div>
-    <div class="nav-item" onclick="navigate('pedidos')">
-      <span class="nav-icon">📋</span>
-      <span>Pedidos</span>
-      <span class="nav-badge" id="badge-pedidos">0</span>
-    </div>
-    <div class="nav-item" onclick="navigate('estoque')">
-      <span class="nav-icon">📦</span>
-      <span>Estoque</span>
-      <span class="nav-badge" id="badge-estoque" style="background:var(--red);display:none">!</span>
-    </div>
-    <div class="nav-item" onclick="navigate('validades')">
-      <span class="nav-icon">⏰</span>
-      <span>Validades</span>
-      <span class="nav-badge" id="badge-validades" style="background:var(--yellow);display:none">!</span>
-    </div>
-    <div class="nav-item" onclick="navigate('caixa')">
-      <span class="nav-icon">💰</span>
-      <span>Caixa</span>
-    </div>
-    <div class="nav-item" onclick="navigate('precos')">
-      <span class="nav-icon">🏷️</span>
-      <span>Preços</span>
-    </div>
-    <div class="nav-item" onclick="navigate('relatorios')">
-      <span class="nav-icon">📊</span>
-      <span>Relatórios</span>
-    </div>
-  </nav>
+  <nav class="nav" id="nav-menu"></nav>
 
   <div class="sidebar-footer">
     <div class="clock" id="clock">--:--</div>
@@ -1150,23 +1141,23 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
 <!-- MAIN -->
 <main class="main">
   <div class="topbar">
-    <button class="premium-menu">☰</button>
+    <button class="premium-menu" onclick="toggleSidebarMobile()" title="Menu">☰</button>
     <div class="premium-welcome">
-      <strong>Olá, João! 👋</strong>
+      <strong>Olá, <span id="topbar-user-name">Dono</span>! 👋</strong>
       <span>Bem-vindo ao JJR Sistema</span>
     </div>
     <div class="premium-search">
       <span>⌕</span>
-      <input type="text" placeholder="Buscar pedido, cliente ou produto...">
+      <input type="text" id="global-search" placeholder="Buscar pedido, cliente ou produto..." onkeydown="handleGlobalSearch(event)">
       <kbd>Ctrl + K</kbd>
     </div>
     <div class="topbar-right">
       <button class="topbar-action" onclick="navigate('pedidos')">＋ Novo Pedido</button>
-      <button class="icon-top" title="Mensagens">💬<em>3</em></button>
-      <button class="icon-top" title="Alertas">🔔<em>7</em></button>
-      <div class="profile-mini">
-        <div class="profile-avatar">J</div>
-        <div><strong>João</strong><span>Administrador</span></div>
+      <button class="icon-top" title="Mensagens / WhatsApp" onclick="openTopbarMessages()">💬<em id="topbar-msg-count">3</em></button>
+      <button class="icon-top" title="Alertas" onclick="openTopbarAlerts()">🔔<em id="topbar-alert-count">0</em></button>
+      <div class="profile-mini" onclick="openUserSettingsModal()" title="Editar usuário" style="cursor:pointer">
+        <div class="profile-avatar" id="profile-avatar">D</div>
+        <div><strong id="profile-name">Dono</strong><span id="profile-role">Administrador</span></div>
       </div>
     </div>
     <div class="page-title" id="page-title">Dashboard</div>
@@ -1297,38 +1288,13 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
 
           <div class="form-group">
             <div class="form-label">Tamanho</div>
-            <div class="size-grid" id="size-selector">
-              <div class="size-btn" onclick="selectSize('300ml')" data-size="300ml">
-                <span class="size-label">300ml</span>
-                <div class="size-price">R$ 10,00</div>
-              </div>
-              <div class="size-btn" onclick="selectSize('500ml')" data-size="500ml">
-                <span class="size-label">500ml</span>
-                <div class="size-price">R$ 15,00</div>
-              </div>
-              <div class="size-btn" onclick="selectSize('700ml')" data-size="700ml">
-                <span class="size-label">700ml</span>
-                <div class="size-price">R$ 20,00</div>
-              </div>
-              <div class="size-btn" onclick="selectSize('1L')" data-size="1L">
-                <span class="size-label">1L</span>
-                <div class="size-price">R$ 28,00</div>
-              </div>
-            </div>
+            <div class="size-grid" id="size-selector"></div>
           </div>
 
           <div class="form-group">
             <div class="form-label">Adicionais</div>
-            <div class="adicionais-grid" id="adicionais-selector">
-              <div class="adicional-btn" onclick="toggleAdicional('banana')" data-ad="banana">🍌 Banana<br><small>+R$2</small></div>
-              <div class="adicional-btn" onclick="toggleAdicional('morango')" data-ad="morango">🍓 Morango<br><small>+R$3</small></div>
-              <div class="adicional-btn" onclick="toggleAdicional('leite_condensado')" data-ad="leite_condensado">🥛 L. Condensado<br><small>+R$2</small></div>
-              <div class="adicional-btn" onclick="toggleAdicional('leite_po')" data-ad="leite_po">🥛 L. em Pó<br><small>+R$2</small></div>
-              <div class="adicional-btn" onclick="toggleAdicional('granola')" data-ad="granola">🌾 Granola<br><small>+R$2</small></div>
-              <div class="adicional-btn" onclick="toggleAdicional('pacoca')" data-ad="pacoca">🥜 Paçoca<br><small>+R$2</small></div>
-              <div class="adicional-btn" onclick="toggleAdicional('nutella')" data-ad="nutella">🍫 Nutella<br><small>+R$5</small></div>
-              <div class="adicional-btn" onclick="toggleAdicional('ovomaltine')" data-ad="ovomaltine">🍪 Ovomaltine<br><small>+R$3</small></div>
-            </div>
+            <div class="adicionais-grid" id="adicionais-selector"></div>
+          </div>
           </div>
 
           <div class="grid-2" style="gap:12px">
@@ -1613,6 +1579,51 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
     </div>
 
 
+
+
+    <!-- ══ CARDÁPIO / ITENS VENDIDOS ══ -->
+    <div class="page" id="page-cardapio">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Cardápio e Itens Vendidos</div>
+          <div style="font-size:13px;color:var(--text3);margin-top:4px">Adicione, edite ou remova os produtos que aparecem na tela de pedido. Isso é separado do estoque.</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openCardapioModal()">+ Adicionar item</button>
+      </div>
+
+      <div class="settings-note">
+        🛒 Use <b>Produto principal</b> para itens vendidos como Açaí 300ml, Combo, Copo especial etc. Use <b>Adicional</b> para complementos selecionáveis no pedido.
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">Produtos principais</div>
+            <span class="badge badge-purple" id="count-cardapio-produtos">0 itens</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Item</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="tabela-cardapio-produtos"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">Adicionais</div>
+            <span class="badge badge-purple" id="count-cardapio-adicionais">0 itens</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Item</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="tabela-cardapio-adicionais"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ══ PREÇOS / CARDÁPIO ══ -->
     <div class="page" id="page-precos">
       <div class="section-header">
@@ -1747,6 +1758,73 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
   </div>
 </div>
 
+
+
+<!-- MODAL CARDÁPIO -->
+<div class="modal-overlay" id="modal-cardapio">
+  <div class="modal">
+    <div class="modal-title">🛒 <span id="modal-cardapio-title">Adicionar item</span></div>
+    <input type="hidden" id="cardapio-id">
+    <div class="grid-2" style="gap:12px">
+      <div class="form-group" style="margin:0">
+        <div class="form-label">Tipo</div>
+        <select class="form-control" id="cardapio-tipo">
+          <option value="produto">Produto principal</option>
+          <option value="adicional">Adicional</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin:0">
+        <div class="form-label">Emoji/Ícone</div>
+        <input type="text" class="form-control" id="cardapio-emoji" maxlength="4" placeholder="🍧">
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:12px">
+      <div class="form-label">Nome do item</div>
+      <input type="text" class="form-control" id="cardapio-nome" placeholder="Ex: Açaí 500ml, Combo família, Nutella">
+    </div>
+    <div class="grid-2" style="gap:12px">
+      <div class="form-group" style="margin:0">
+        <div class="form-label">Preço</div>
+        <input type="number" class="form-control" id="cardapio-preco" min="0" step="0.01" placeholder="0,00">
+      </div>
+      <div class="form-group" style="margin:0">
+        <div class="form-label">Ativo no pedido?</div>
+        <select class="form-control" id="cardapio-ativo">
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modal-cardapio')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveCardapioItem()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL USUÁRIO / TOPO -->
+<div class="modal-overlay" id="modal-user-settings">
+  <div class="modal">
+    <div class="modal-title">👤 Personalizar sistema</div>
+    <div class="form-group">
+      <div class="form-label">Nome exibido no topo</div>
+      <input type="text" class="form-control" id="setting-user-name" placeholder="Ex: Gabriel, Dono, JJR">
+    </div>
+    <div class="form-group">
+      <div class="form-label">Cargo/Função</div>
+      <input type="text" class="form-control" id="setting-user-role" placeholder="Ex: Administrador, Dono">
+    </div>
+    <div class="form-group">
+      <div class="form-label">Letra do avatar</div>
+      <input type="text" class="form-control" id="setting-user-avatar" maxlength="2" placeholder="G">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center" onclick="closeModal('modal-user-settings')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveUserSettings()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toast-container"></div>
 
@@ -1818,7 +1896,7 @@ function loadData(key, def) {
 
 async function loadCloudData() {
   try {
-    const keys = ['pedidos', 'estoque', 'despesas', 'lotesValidade', 'precos', 'nextPedidoId', 'nextEstoqueId', 'nextDespesaId', 'nextLoteId'];
+    const keys = ['pedidos', 'estoque', 'despesas', 'lotesValidade', 'precos', 'cardapio', 'userSettings', 'navOrder', 'nextPedidoId', 'nextEstoqueId', 'nextDespesaId', 'nextLoteId', 'nextCardapioId'];
     const { data, error } = await db.from('jjr_store').select('key,value').in('key', keys);
     if (error) throw error;
     (data || []).forEach(row => {
@@ -1856,6 +1934,11 @@ let nextPedidoId = loadData('nextPedidoId', 1);
 let nextEstoqueId = loadData('nextEstoqueId', 16);
 let nextDespesaId = loadData('nextDespesaId', 1);
 let nextLoteId = loadData('nextLoteId', 1);
+let nextCardapioId = loadData('nextCardapioId', 1);
+
+const DEFAULT_USER_SETTINGS = { name: 'Dono', role: 'Administrador', avatar: 'D' };
+let userSettings = loadData('userSettings', DEFAULT_USER_SETTINGS);
+let navOrder = loadData('navOrder', ['dashboard','pedidos','cardapio','estoque','validades','caixa','precos','relatorios']);
 
 async function login() {
   const email = document.getElementById('login-email').value;
@@ -2607,13 +2690,14 @@ function renderDashboard() {
 // ═══════════════════════════════════════════════════════════
 //  NAVIGATION
 // ═══════════════════════════════════════════════════════════
-const pageNames = { dashboard: 'Dashboard', pedidos: 'Pedidos', estoque: 'Estoque', validades: 'Validades', caixa: 'Caixa & Financeiro', precos: 'Preços do Cardápio', relatorios: 'Relatórios' };
+const pageNames = { dashboard: 'Dashboard', pedidos: 'Pedidos', cardapio: 'Cardápio', estoque: 'Estoque', validades: 'Validades', caixa: 'Caixa & Financeiro', precos: 'Preços do Cardápio', relatorios: 'Relatórios' };
 
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  document.querySelector(`[onclick="navigate('${page}')"]`).classList.add('active');
+  const activeNav = document.querySelector(`[data-page="${page}"]`);
+  if (activeNav) activeNav.classList.add('active');
   document.getElementById('page-title').textContent = pageNames[page];
   renderAll();
 }
@@ -2742,6 +2826,289 @@ function renderAll() {
   renderPrecos();
 }
 
+
+
+// ═══════════════════════════════════════════════════════════
+//  CARDÁPIO EDITÁVEL + TOPBAR + NAV ORDENÁVEL
+// ═══════════════════════════════════════════════════════════
+const DEFAULT_CARDAPIO = [
+  { id: 1, tipo: 'produto', key: '300ml', nome: 'Açaí 300ml', emoji: '🥤', preco: 10, ativo: true },
+  { id: 2, tipo: 'produto', key: '500ml', nome: 'Açaí 500ml', emoji: '🍧', preco: 15, ativo: true },
+  { id: 3, tipo: 'produto', key: '700ml', nome: 'Açaí 700ml', emoji: '🍨', preco: 20, ativo: true },
+  { id: 4, tipo: 'produto', key: '1L', nome: 'Açaí 1L', emoji: '🫐', preco: 28, ativo: true },
+  { id: 5, tipo: 'adicional', key: 'banana', nome: 'Banana', emoji: '🍌', preco: 2, ativo: true },
+  { id: 6, tipo: 'adicional', key: 'morango', nome: 'Morango', emoji: '🍓', preco: 3, ativo: true },
+  { id: 7, tipo: 'adicional', key: 'leite_condensado', nome: 'Leite Condensado', emoji: '🥛', preco: 2, ativo: true },
+  { id: 8, tipo: 'adicional', key: 'leite_po', nome: 'Leite em Pó', emoji: '🥛', preco: 2, ativo: true },
+  { id: 9, tipo: 'adicional', key: 'granola', nome: 'Granola', emoji: '🌾', preco: 2, ativo: true },
+  { id: 10, tipo: 'adicional', key: 'pacoca', nome: 'Paçoca', emoji: '🥜', preco: 2, ativo: true },
+  { id: 11, tipo: 'adicional', key: 'nutella', nome: 'Nutella', emoji: '🍫', preco: 5, ativo: true },
+  { id: 12, tipo: 'adicional', key: 'ovomaltine', nome: 'Ovomaltine', emoji: '🍪', preco: 3, ativo: true }
+];
+let cardapio = loadData('cardapio', null);
+if (!Array.isArray(cardapio) || !cardapio.length) {
+  cardapio = DEFAULT_CARDAPIO.map(i => ({...i, preco: Number(PRICES[i.key] ?? i.preco)}));
+}
+nextCardapioId = Math.max(nextCardapioId || 1, ...cardapio.map(i => Number(i.id) || 0)) + 1;
+
+const NAV_CONFIG = {
+  dashboard: { icon:'🏠', label:'Dashboard' }, pedidos: { icon:'📋', label:'Pedidos', badgeId:'badge-pedidos' },
+  cardapio: { icon:'🛒', label:'Cardápio' }, estoque: { icon:'📦', label:'Estoque', badgeId:'badge-estoque', badgeStyle:'background:var(--red);display:none' },
+  validades: { icon:'⏰', label:'Validades', badgeId:'badge-validades', badgeStyle:'background:var(--yellow);display:none' },
+  caixa: { icon:'💰', label:'Caixa' }, precos: { icon:'🏷️', label:'Preços' }, relatorios: { icon:'📊', label:'Relatórios' }
+};
+
+function getProdutosAtivos() { return cardapio.filter(i => i.tipo === 'produto' && i.ativo); }
+function getAdicionaisAtivos() { return cardapio.filter(i => i.tipo === 'adicional' && i.ativo); }
+function getItemByKey(key) { return cardapio.find(i => i.key === key); }
+function getItemName(key) { return getItemByKey(key)?.nome || SIZE_LABELS[key] || ADICIONAL_NAMES[key] || key; }
+function getItemEmoji(key) { return getItemByKey(key)?.emoji || '🍧'; }
+function getItemPrice(key) { return Number(getItemByKey(key)?.preco ?? PRICES[key] ?? 0); }
+function syncPricesFromCardapio() { cardapio.forEach(i => { PRICES[i.key] = Number(i.preco) || 0; }); }
+function slugifyKey(text) {
+  return String(text || 'item').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') + '_' + Date.now().toString(36).slice(-4);
+}
+
+function renderNav() {
+  const nav = document.getElementById('nav-menu');
+  if (!nav) return;
+  const validOrder = navOrder.filter(k => NAV_CONFIG[k]);
+  Object.keys(NAV_CONFIG).forEach(k => { if (!validOrder.includes(k)) validOrder.push(k); });
+  navOrder = validOrder;
+  nav.innerHTML = navOrder.map(page => {
+    const n = NAV_CONFIG[page];
+    const badge = n.badgeId ? `<span class="nav-badge" id="${n.badgeId}" style="${n.badgeStyle || ''}">0</span>` : '';
+    return `<div class="nav-item" draggable="true" data-page="${page}" onclick="navigate('${page}')">
+      <span class="nav-icon">${n.icon}</span><span>${n.label}</span>${badge}<span class="drag-handle" title="Arraste para reordenar">⋮⋮</span>
+    </div>`;
+  }).join('');
+  setupNavDrag();
+  const activePage = document.querySelector('.page.active')?.id?.replace('page-','') || 'dashboard';
+  const active = document.querySelector(`[data-page="${activePage}"]`);
+  if (active) active.classList.add('active');
+}
+
+function setupNavDrag() {
+  const nav = document.getElementById('nav-menu');
+  if (!nav) return;
+  let dragged = null;
+  nav.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('dragstart', e => { dragged = item; item.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+    item.addEventListener('dragend', () => { item.classList.remove('dragging'); dragged = null; saveNavOrderFromDom(); });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (!dragged || dragged === item) return;
+      const rect = item.getBoundingClientRect();
+      const after = e.clientY > rect.top + rect.height / 2;
+      nav.insertBefore(dragged, after ? item.nextSibling : item);
+    });
+  });
+}
+
+function saveNavOrderFromDom() {
+  navOrder = Array.from(document.querySelectorAll('#nav-menu .nav-item')).map(i => i.dataset.page);
+  saveData('navOrder', navOrder);
+  showToast('Ordem do menu salva!', 'success');
+}
+
+function renderPedidoOptions() {
+  const sizesEl = document.getElementById('size-selector');
+  const adsEl = document.getElementById('adicionais-selector');
+  if (sizesEl) {
+    const produtos = getProdutosAtivos();
+    sizesEl.innerHTML = produtos.length ? produtos.map(item => `<div class="size-btn" onclick="selectSize('${item.key}')" data-size="${item.key}">
+      <span class="size-label">${item.emoji || '🍧'} ${item.nome}</span><div class="size-price">${fmt(Number(item.preco) || 0)}</div>
+    </div>`).join('') : `<div class="empty-state" style="grid-column:1/-1;padding:20px"><div class="empty-text">Nenhum produto ativo</div><div class="empty-sub">Adicione itens na aba Cardápio.</div></div>`;
+  }
+  if (adsEl) {
+    const adicionais = getAdicionaisAtivos();
+    adsEl.innerHTML = adicionais.length ? adicionais.map(item => `<div class="adicional-btn" onclick="toggleAdicional('${item.key}')" data-ad="${item.key}">${item.emoji || '➕'} ${item.nome}<br><small>+${fmt(Number(item.preco) || 0)}</small></div>`).join('') : `<div class="empty-state" style="grid-column:1/-1;padding:20px"><div class="empty-text">Nenhum adicional ativo</div></div>`;
+  }
+}
+
+// sobrescreve cálculo para usar cardápio editável
+function calcTotal() {
+  const qtd = parseInt(document.getElementById('qtd-input').value) || 1;
+  let unit = 0;
+  if (currentSize) unit += getItemPrice(currentSize);
+  currentAdicionais.forEach(a => unit += getItemPrice(a));
+  const total = unit * qtd;
+  const el = document.getElementById('total-display');
+  if (el) el.textContent = fmt(total);
+  return total;
+}
+
+function selectSize(size) {
+  currentSize = size;
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.querySelector(`[data-size="${CSS.escape(size)}"]`);
+  if (btn) btn.classList.add('selected');
+  calcTotal(); calcTroco();
+}
+
+function toggleAdicional(ad) {
+  const idx = currentAdicionais.indexOf(ad);
+  if (idx >= 0) currentAdicionais.splice(idx, 1); else currentAdicionais.push(ad);
+  document.querySelectorAll('.adicional-btn').forEach(b => b.classList.toggle('selected', currentAdicionais.includes(b.dataset.ad)));
+  calcTotal(); calcTroco();
+}
+
+function renderPedidos() {
+  const today = new Date().toLocaleDateString('pt-BR');
+  const todayPedidos = pedidos.filter(p => p.date === today);
+  const container = document.getElementById('lista-pedidos');
+  document.getElementById('count-pedidos-hoje').textContent = todayPedidos.length + ' pedidos';
+  const badge = document.getElementById('badge-pedidos'); if (badge) badge.textContent = todayPedidos.length;
+  if (!todayPedidos.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🍇</div><div class="empty-text">Nenhum pedido ainda</div><div class="empty-sub">Crie o primeiro pedido do dia!</div></div>`; return;
+  }
+  container.innerHTML = todayPedidos.map(p => {
+    const statusInfo = { preparo: { badge: 'badge-yellow', label: '⏳ Em Preparo' }, pronto: { badge: 'badge-purple', label: '✅ Pronto' }, entregue: { badge: 'badge-green', label: '📦 Entregue' } }[p.status];
+    const pgtoLabel = { dinheiro: '💵 Dinheiro', pix: '📱 PIX', debito: '💳 Débito', credito: '💳 Crédito' }[p.pgto];
+    const ads = (p.adicionais || []).map(a => getItemName(a)).join(', ') || 'Sem adicionais';
+    return `<div class="pedido-card"><div class="pedido-header"><div><div class="pedido-num">#${String(p.id).padStart(3,'0')} — ${getItemName(p.size)}</div><div class="pedido-time">${p.hora} · Qtd: ${p.qtd}</div></div><span class="badge ${statusInfo.badge}">${statusInfo.label}</span></div><div class="pedido-details">${ads}</div><div class="pedido-footer"><div><div class="pedido-price">${fmt(p.total)}</div><div style="font-size:11px;color:var(--text3)">${pgtoLabel}</div></div><div style="display:flex;gap:6px">${p.status === 'preparo' ? `<button class="btn btn-success btn-xs" onclick="updateStatus(${p.id},'pronto')">Pronto</button>` : ''}${p.status === 'pronto' ? `<button class="btn btn-secondary btn-xs" onclick="updateStatus(${p.id},'entregue')">Entregar</button>` : ''}<button class="btn btn-danger btn-xs" onclick="deletePedido(${p.id})">✕</button></div></div></div>`;
+  }).join('');
+}
+
+function baixarEstoque(pedido) {
+  const { size, adicionais, qtd } = pedido;
+  if (STOCK_MAP.acai && STOCK_MAP.acai[size]) updateEstoqueKey('acai', -(STOCK_MAP.acai[size] * qtd));
+  const copoKey = { '300ml': 'copo300', '500ml': 'copo500', '700ml': 'copo700', '1L': 'copo1L' }[size];
+  if (copoKey) updateEstoqueKey(copoKey, -qtd);
+  updateEstoqueKey('colher', -qtd); updateEstoqueKey('tampa', -qtd);
+  (adicionais || []).forEach(ad => { const consumption = STOCK_MAP[ad]; if (consumption) updateEstoqueKey(ad, -(consumption * qtd)); });
+  saveData('estoque', estoque);
+}
+
+function renderCardapio() {
+  const prodTbody = document.getElementById('tabela-cardapio-produtos');
+  const addTbody = document.getElementById('tabela-cardapio-adicionais');
+  if (!prodTbody || !addTbody) return;
+  const renderRows = tipo => cardapio.filter(i => i.tipo === tipo).map(item => `<tr>
+    <td><div class="cardapio-item-name"><span class="cardapio-emoji">${item.emoji || '🍧'}</span><span>${item.nome}<br><small style="font-weight:500;color:var(--text3)">${item.key}</small></span></div></td>
+    <td style="font-weight:900;color:var(--lilac)">${fmt(Number(item.preco) || 0)}</td>
+    <td><span class="badge ${item.ativo ? 'badge-green':'badge-gray'}">${item.ativo ? 'Ativo':'Oculto'}</span></td>
+    <td><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-xs" onclick="openCardapioModal(${item.id})">✎</button><button class="btn btn-secondary btn-xs" onclick="toggleCardapioAtivo(${item.id})">${item.ativo ? 'Ocultar':'Ativar'}</button><button class="btn btn-danger btn-xs" onclick="deleteCardapioItem(${item.id})">✕</button></div></td>
+  </tr>`).join('') || `<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:24px">Nenhum item cadastrado</td></tr>`;
+  prodTbody.innerHTML = renderRows('produto');
+  addTbody.innerHTML = renderRows('adicional');
+  document.getElementById('count-cardapio-produtos').textContent = cardapio.filter(i=>i.tipo==='produto').length + ' itens';
+  document.getElementById('count-cardapio-adicionais').textContent = cardapio.filter(i=>i.tipo==='adicional').length + ' itens';
+}
+
+function openCardapioModal(id=null) {
+  const item = id ? cardapio.find(i => i.id === id) : null;
+  document.getElementById('modal-cardapio-title').textContent = item ? 'Editar item' : 'Adicionar item';
+  document.getElementById('cardapio-id').value = item?.id || '';
+  document.getElementById('cardapio-tipo').value = item?.tipo || 'produto';
+  document.getElementById('cardapio-emoji').value = item?.emoji || '🍧';
+  document.getElementById('cardapio-nome').value = item?.nome || '';
+  document.getElementById('cardapio-preco').value = item ? Number(item.preco).toFixed(2) : '';
+  document.getElementById('cardapio-ativo').value = item?.ativo === false ? 'false' : 'true';
+  document.getElementById('modal-cardapio').classList.add('open');
+}
+
+function saveCardapioItem() {
+  const id = parseInt(document.getElementById('cardapio-id').value);
+  const tipo = document.getElementById('cardapio-tipo').value;
+  const emoji = document.getElementById('cardapio-emoji').value.trim() || (tipo === 'produto' ? '🍧' : '➕');
+  const nome = document.getElementById('cardapio-nome').value.trim();
+  const preco = parseFloat(document.getElementById('cardapio-preco').value);
+  const ativo = document.getElementById('cardapio-ativo').value === 'true';
+  if (!nome || isNaN(preco)) { showToast('Preencha nome e preço!', 'error'); return; }
+  if (id) {
+    const item = cardapio.find(i => i.id === id);
+    if (item) { item.tipo = tipo; item.emoji = emoji; item.nome = nome; item.preco = preco; item.ativo = ativo; }
+  } else {
+    cardapio.push({ id: nextCardapioId++, tipo, key: slugifyKey(nome), nome, emoji, preco, ativo });
+    saveData('nextCardapioId', nextCardapioId);
+  }
+  syncPricesFromCardapio();
+  saveData('cardapio', cardapio); saveData('precos', PRICES);
+  closeModal('modal-cardapio'); renderAll(); showToast('Cardápio atualizado!', 'success');
+}
+
+function toggleCardapioAtivo(id) {
+  const item = cardapio.find(i => i.id === id); if (!item) return;
+  item.ativo = !item.ativo; saveData('cardapio', cardapio); renderAll();
+}
+
+function deleteCardapioItem(id) {
+  const item = cardapio.find(i => i.id === id); if (!item) return;
+  if (!confirm(`Remover "${item.nome}" do cardápio? Pedidos antigos continuarão salvos.`)) return;
+  cardapio = cardapio.filter(i => i.id !== id);
+  delete PRICES[item.key]; saveData('cardapio', cardapio); saveData('precos', PRICES); renderAll(); showToast('Item removido', 'error');
+}
+
+function renderPrecos() {
+  const tamanhosEl = document.getElementById('precos-tamanhos');
+  const adicionaisEl = document.getElementById('precos-adicionais');
+  if (tamanhosEl) tamanhosEl.innerHTML = cardapio.filter(i=>i.tipo==='produto').map(i => priceCardHtml(i.key, i.nome, 'Produto')).join('');
+  if (adicionaisEl) adicionaisEl.innerHTML = cardapio.filter(i=>i.tipo==='adicional').map(i => priceCardHtml(i.key, i.nome, 'Adicional')).join('');
+  updatePriceLabels();
+}
+
+function savePrecos() {
+  document.querySelectorAll('[data-price-key]').forEach(input => {
+    const key = input.dataset.priceKey;
+    const val = parseFloat(input.value) || 0;
+    PRICES[key] = val;
+    const item = cardapio.find(i => i.key === key); if (item) item.preco = val;
+  });
+  saveData('precos', PRICES); saveData('cardapio', cardapio);
+  updatePriceLabels(); calcTotal(); calcTroco(); renderAll(); showToast('Preços atualizados com sucesso!', 'success');
+}
+
+function resetPrecosPadrao() {
+  if (!confirm('Restaurar todos os preços e itens padrão do cardápio?')) return;
+  cardapio = DEFAULT_CARDAPIO.map(i => ({...i})); PRICES = {...DEFAULT_PRICES};
+  nextCardapioId = Math.max(...cardapio.map(i=>i.id)) + 1;
+  saveData('cardapio', cardapio); saveData('precos', PRICES); saveData('nextCardapioId', nextCardapioId);
+  renderAll(); showToast('Cardápio padrão restaurado!', 'success');
+}
+
+function updatePriceLabels() { renderPedidoOptions(); }
+
+function renderUserSettings() {
+  const name = userSettings.name || 'Dono', role = userSettings.role || 'Administrador', avatar = userSettings.avatar || name[0] || 'D';
+  const topName = document.getElementById('topbar-user-name'); if (topName) topName.textContent = name;
+  const profileName = document.getElementById('profile-name'); if (profileName) profileName.textContent = name;
+  const profileRole = document.getElementById('profile-role'); if (profileRole) profileRole.textContent = role;
+  const profileAvatar = document.getElementById('profile-avatar'); if (profileAvatar) profileAvatar.textContent = avatar.toUpperCase();
+}
+function openUserSettingsModal() {
+  document.getElementById('setting-user-name').value = userSettings.name || '';
+  document.getElementById('setting-user-role').value = userSettings.role || '';
+  document.getElementById('setting-user-avatar').value = userSettings.avatar || '';
+  document.getElementById('modal-user-settings').classList.add('open');
+}
+function saveUserSettings() {
+  userSettings = {
+    name: document.getElementById('setting-user-name').value.trim() || 'Dono',
+    role: document.getElementById('setting-user-role').value.trim() || 'Administrador',
+    avatar: (document.getElementById('setting-user-avatar').value.trim() || document.getElementById('setting-user-name').value.trim().charAt(0) || 'D').slice(0,2).toUpperCase()
+  };
+  saveData('userSettings', userSettings); closeModal('modal-user-settings'); renderUserSettings(); showToast('Usuário atualizado!', 'success');
+}
+
+function handleGlobalSearch(e) {
+  if (e.key !== 'Enter') return;
+  const q = e.target.value.trim().toLowerCase();
+  if (!q) return;
+  if (cardapio.some(i => i.nome.toLowerCase().includes(q))) navigate('cardapio');
+  else if (estoque.some(i => i.nome.toLowerCase().includes(q))) navigate('estoque');
+  else if (pedidos.some(p => String(p.id).includes(q))) navigate('pedidos');
+  else showToast('Nada encontrado para: ' + q, 'error');
+}
+function openTopbarMessages() { navigate('relatorios'); showToast('Aqui depois entra o envio do relatório no WhatsApp.', 'success'); }
+function openTopbarAlerts() { navigate('validades'); }
+function toggleSidebarMobile() { document.querySelector('.sidebar').classList.toggle('mobile-open'); }
+
+function renderAll() {
+  renderNav(); renderUserSettings(); renderPedidoOptions(); renderDashboard(); renderPedidos(); renderEstoque(); renderValidades(); renderCaixa(); renderRelatorios(); renderPrecos(); renderCardapio();
+  const topAlert = document.getElementById('topbar-alert-count');
+  if (topAlert) topAlert.textContent = (estoque.filter(e => e.qtd <= e.minimo).length + lotesValidade.filter(l => getValidadeStatus(l).badge !== 'badge-green').length);
+}
 // ═══════════════════════════════════════════════════════════
 //  CLOCK
 // ═══════════════════════════════════════════════════════════
@@ -2768,10 +3135,14 @@ async function initApp() {
   despesas = loadData('despesas', []);
   lotesValidade = loadData('lotesValidade', []);
   PRICES = loadData('precos', DEFAULT_PRICES);
+  cardapio = loadData('cardapio', cardapio);
+  userSettings = loadData('userSettings', DEFAULT_USER_SETTINGS);
+  navOrder = loadData('navOrder', navOrder);
   nextPedidoId = loadData('nextPedidoId', 1);
   nextEstoqueId = loadData('nextEstoqueId', 16);
   nextDespesaId = loadData('nextDespesaId', 1);
   nextLoteId = loadData('nextLoteId', 1);
+  nextCardapioId = loadData('nextCardapioId', nextCardapioId);
   renderAll();
 }
 
