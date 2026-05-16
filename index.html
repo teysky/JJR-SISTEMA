@@ -1103,6 +1103,140 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
   .size-btn.disabled, .adicional-btn.disabled { opacity:.45; pointer-events:none; }
   @media(max-width:900px){ .sidebar.mobile-open{display:flex;position:fixed;left:0;top:0;bottom:0;width:280px;z-index:80;box-shadow:20px 0 60px rgba(0,0,0,.35)} }
 
+
+
+/* ── CORREÇÃO PREMIUM DA TELA DE PEDIDOS ── */
+.pedido-layout-premium{
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(360px,.75fr);
+  gap:18px;
+  align-items:start;
+  margin-bottom:18px;
+}
+.order-builder-card,.order-summary-card,.pedidos-day-card{
+  padding:24px;
+}
+.compact-header{margin-bottom:18px;}
+.section-subtitle{
+  margin-top:4px;
+  color:var(--text3);
+  font-size:13px;
+  font-weight:500;
+}
+.order-products-grid{
+  grid-template-columns:repeat(3,minmax(150px,1fr));
+  gap:10px;
+}
+.order-addons-grid{
+  grid-template-columns:repeat(4,minmax(120px,1fr));
+  gap:10px;
+}
+.order-products-grid .size-btn,
+.order-addons-grid .adicional-btn{
+  min-height:72px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  line-height:1.2;
+}
+.order-summary-card{
+  position:sticky;
+  top:106px;
+}
+.order-fields-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.order-fields-row .form-group{margin:0 0 14px 0;}
+.troco-premium-area{margin-top:2px;}
+.order-total-box{
+  margin:6px 0 14px 0;
+  padding:26px 18px;
+  text-align:center;
+}
+.order-total-box .total-value{
+  font-size:42px;
+  line-height:1;
+}
+.order-confirm-btn{
+  width:100%;
+  justify-content:center;
+  padding:16px;
+  font-size:15px;
+  border-radius:16px;
+}
+.pedidos-list-premium{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  max-height:520px;
+  overflow-y:auto;
+  padding-right:4px;
+}
+@media(max-width:1180px){
+  .pedido-layout-premium{grid-template-columns:1fr;}
+  .order-summary-card{position:static;}
+  .order-products-grid{grid-template-columns:repeat(2,minmax(140px,1fr));}
+}
+@media(max-width:680px){
+  .order-products-grid,.order-addons-grid,.order-fields-row{grid-template-columns:1fr;}
+  .order-total-box .total-value{font-size:34px;}
+  .order-builder-card,.order-summary-card,.pedidos-day-card{padding:18px;}
+}
+
+
+
+  /* ── RETOQUES: BUSCA NO PEDIDO, ORDEM DO CARDÁPIO E HISTÓRICO ── */
+  .pedido-search-wrap {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    margin: 14px 0 18px;
+  }
+  .pedido-search-wrap .form-control { height: 46px; }
+  .cardapio-order-cell { width: 110px; white-space: nowrap; }
+  .order-move-btn {
+    width: 30px; height: 30px; border-radius: 9px;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--text2); cursor: pointer; font-weight: 900;
+  }
+  .order-move-btn:hover { border-color: var(--purple); color: var(--lilac); }
+  .cardapio-row[draggable="true"] { cursor: grab; }
+  .cardapio-row.dragging { opacity: .45; }
+  .drag-mini { color: var(--text3); font-size: 16px; margin-left: 4px; }
+  .history-card { margin-top: 20px; }
+  .historico-actions { display:flex; gap:6px; justify-content:flex-end; flex-wrap:wrap; }
+  .muted-small { color: var(--text3); font-size: 12px; }
+  @media (max-width: 768px) {
+    .pedido-search-wrap { grid-template-columns: 1fr; }
+    .cardapio-order-cell { width: auto; }
+  }
+
+
+
+/* ── SIDEBAR ABRIR/FECHAR PELO BOTÃO ☰ ── */
+body { transition: background .25s ease; }
+.sidebar { transition: width .28s ease, padding .28s ease, transform .28s ease, opacity .2s ease; overflow:hidden; }
+.main { transition: all .28s ease; min-width:0; }
+.premium-menu { transition: background .2s ease, transform .2s ease, color .2s ease; display:grid; place-items:center; flex-shrink:0; }
+.premium-menu:hover { background:#f0e7ff; color:#6f2de2; transform:scale(1.03); }
+body.sidebar-collapsed .sidebar { width:0 !important; min-width:0 !important; padding-left:0 !important; padding-right:0 !important; border-right:0 !important; opacity:0; pointer-events:none; }
+body.sidebar-collapsed .sidebar > * { opacity:0; visibility:hidden; }
+body.sidebar-collapsed .main { flex:1 1 100%; width:100%; }
+body.sidebar-collapsed .premium-menu { background:#f0e7ff; color:#6f2de2; }
+body.sidebar-collapsed .content { max-width: none; }
+.sidebar-backdrop { display:none; }
+@media(max-width:900px){
+  .sidebar{display:flex;position:fixed;left:0;top:0;bottom:0;width:280px;z-index:80;box-shadow:20px 0 60px rgba(0,0,0,.35);transform:translateX(-110%);opacity:1;padding:0 18px 22px;}
+  .sidebar.mobile-open{transform:translateX(0);}
+  body.sidebar-collapsed .sidebar{transform:translateX(-110%);width:280px !important;padding:0 18px 22px !important;opacity:1;pointer-events:none;}
+  body.sidebar-collapsed .sidebar > *{opacity:1;visibility:visible;}
+  .sidebar-backdrop{position:fixed;inset:0;background:rgba(10,8,20,.42);backdrop-filter:blur(2px);z-index:70;}
+  .sidebar-backdrop.show{display:block;}
+}
+
 </style>
 </head>
 <body>
@@ -1137,6 +1271,7 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
     <div class="date-str" id="datestr">---</div>
   </div>
 </aside>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebarMobile()"></div>
 
 <!-- MAIN -->
 <main class="main">
@@ -1279,30 +1414,45 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
 
     <!-- ══ PEDIDOS ══ -->
     <div class="page" id="page-pedidos">
-      <div class="grid-2">
-        <!-- Novo pedido -->
-        <div class="card">
-          <div class="section-header">
-            <div class="section-title">Novo Pedido</div>
+      <div class="pedido-layout-premium">
+        <section class="card order-builder-card">
+          <div class="section-header compact-header">
+            <div>
+              <div class="section-title">Novo Pedido</div>
+              <div class="section-subtitle">Escolha o item, adicionais e finalize o pagamento.</div>
+            </div>
+          </div>
+
+          <div class="pedido-search-wrap">
+            <input type="search" class="form-control" id="pedido-item-search" placeholder="🔎 Pesquisar item do cardápio..." oninput="filterPedidoItems(this.value)">
+            <button class="btn btn-secondary" type="button" onclick="clearPedidoSearch()">Limpar</button>
           </div>
 
           <div class="form-group">
-            <div class="form-label">Tamanho</div>
-            <div class="size-grid" id="size-selector"></div>
+            <div class="form-label">Itens vendidos</div>
+            <div class="size-grid order-products-grid" id="size-selector"></div>
           </div>
 
           <div class="form-group">
             <div class="form-label">Adicionais</div>
-            <div class="adicionais-grid" id="adicionais-selector"></div>
+            <div class="adicionais-grid order-addons-grid" id="adicionais-selector"></div>
           </div>
+        </section>
+
+        <aside class="card order-summary-card">
+          <div class="section-header compact-header">
+            <div>
+              <div class="section-title">Resumo</div>
+              <div class="section-subtitle">Pagamento e total do pedido.</div>
+            </div>
           </div>
 
-          <div class="grid-2" style="gap:12px">
-            <div class="form-group" style="margin:0">
+          <div class="order-fields-row">
+            <div class="form-group">
               <div class="form-label">Quantidade</div>
               <input type="number" class="form-control" id="qtd-input" min="1" max="99" value="1" oninput="calcTotal()">
             </div>
-            <div class="form-group" style="margin:0">
+            <div class="form-group">
               <div class="form-label">Pagamento</div>
               <select class="form-control" id="pgto-select" onchange="toggleTrocoArea()">
                 <option value="dinheiro">💵 Dinheiro</option>
@@ -1311,49 +1461,48 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
                 <option value="credito">💳 Crédito</option>
               </select>
             </div>
-          
-</div>
+          </div>
 
-          <div id="troco-area" style="margin-top:12px">
-            <div class="grid-2" style="gap:12px">
-              <div class="form-group" style="margin:0">
+          <div id="troco-area" class="troco-premium-area">
+            <div class="order-fields-row">
+              <div class="form-group">
                 <div class="form-label">Valor Recebido</div>
                 <input type="number" class="form-control" id="valor-recebido" placeholder="0,00" min="0" step="0.01" oninput="calcTroco()">
               </div>
-              <div class="form-group" style="margin:0">
+              <div class="form-group">
                 <div class="form-label">Troco</div>
                 <input type="text" class="form-control" id="troco-display" value="R$ 0,00" readonly>
               </div>
             </div>
           </div>
 
-          <div class="divider"></div>
-
-          <div class="total-box" style="margin-bottom:16px">
+          <div class="total-box order-total-box">
             <div class="total-label">Total do Pedido</div>
             <div class="total-value" id="total-display">R$ 0,00</div>
           </div>
 
-          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px" onclick="addPedido()">
+          <button class="btn btn-primary order-confirm-btn" onclick="addPedido()">
             ✅ Confirmar Pedido
           </button>
-        </div>
-
-        <!-- Lista de pedidos do dia -->
-        <div class="card">
-          <div class="section-header">
-            <div class="section-title">Pedidos do Dia</div>
-            <span id="count-pedidos-hoje" class="badge badge-purple">0 pedidos</span>
-          </div>
-          <div id="lista-pedidos" style="display:flex;flex-direction:column;gap:10px;max-height:600px;overflow-y:auto">
-            <div class="empty-state">
-              <div class="empty-icon">🍇</div>
-              <div class="empty-text">Nenhum pedido ainda</div>
-              <div class="empty-sub">Crie o primeiro pedido do dia!</div>
-            </div>
-          </div>
-        </div>
+        </aside>
       </div>
+
+      <section class="card pedidos-day-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Pedidos do Dia</div>
+            <div class="section-subtitle">Acompanhe os pedidos lançados hoje.</div>
+          </div>
+          <span id="count-pedidos-hoje" class="badge badge-purple">0 pedidos</span>
+        </div>
+        <div id="lista-pedidos" class="pedidos-list-premium">
+          <div class="empty-state">
+            <div class="empty-icon">🍇</div>
+            <div class="empty-text">Nenhum pedido ainda</div>
+            <div class="empty-sub">Crie o primeiro pedido do dia!</div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- ══ ESTOQUE ══ -->
@@ -1586,7 +1735,7 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
       <div class="section-header">
         <div>
           <div class="section-title">Cardápio e Itens Vendidos</div>
-          <div style="font-size:13px;color:var(--text3);margin-top:4px">Adicione, edite ou remova os produtos que aparecem na tela de pedido. Isso é separado do estoque.</div>
+          <div style="font-size:13px;color:var(--text3);margin-top:4px">Adicione, edite ou remova os produtos que aparecem na tela de pedido. Isso é separado do estoque. Arraste ou use as setas para mudar a ordem na tela de pedido.</div>
         </div>
         <button class="btn btn-primary btn-sm" onclick="openCardapioModal()">+ Adicionar item</button>
       </div>
@@ -1603,7 +1752,7 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
           </div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Item</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+              <thead><tr><th>Ordem</th><th>Item</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
               <tbody id="tabela-cardapio-produtos"></tbody>
             </table>
           </div>
@@ -1616,7 +1765,7 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
           </div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Item</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+              <thead><tr><th>Ordem</th><th>Item</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
               <tbody id="tabela-cardapio-adicionais"></tbody>
             </table>
           </div>
@@ -1666,6 +1815,11 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
           <div class="dash-value" id="rel-faturamento">R$ 0,00</div>
           <div class="dash-label">Faturamento</div>
         </div>
+        <div class="dash-card" style="background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.25)">
+          <div class="dash-icon">📉</div>
+          <div class="dash-value" id="rel-despesas" style="color:var(--red)">R$ 0,00</div>
+          <div class="dash-label">Total Despesas</div>
+        </div>
         <div class="dash-card green">
           <div class="dash-icon">🛒</div>
           <div class="dash-value" id="rel-pedidos">0</div>
@@ -1702,6 +1856,22 @@ th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);
         <div class="card">
           <div class="card-title">🕐 Horários de Pico</div>
           <div class="bar-chart" id="rel-horarios"></div>
+        </div>
+      </div>
+
+      <div class="card history-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Pedidos no período</div>
+            <div class="section-subtitle">Use esta área para apagar lançamentos de teste ou vendas erradas.</div>
+          </div>
+          <span class="badge badge-purple" id="rel-count-pedidos-periodo">0 pedidos</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Pedido</th><th>Data/Hora</th><th>Item</th><th>Qtd</th><th>Pagamento</th><th>Total</th><th>Ações</th></tr></thead>
+            <tbody id="rel-pedidos-periodo"></tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -2549,13 +2719,15 @@ function filterPedidos(tab) {
 function renderRelatorios() {
   const filtered = filterPedidos(relTab);
   const faturamento = filtered.reduce((a, p) => a + p.total, 0);
-  const totalDesp = despesas.reduce((a, d) => a + d.valor, 0);
+  const totalDesp = despesas.reduce((a, d) => a + (Number(d.valor) || 0), 0);
   const ticket = filtered.length ? faturamento / filtered.length : 0;
 
   document.getElementById('rel-faturamento').textContent = fmt(faturamento);
   document.getElementById('rel-pedidos').textContent = filtered.length;
   document.getElementById('rel-ticket').textContent = fmt(ticket);
-  document.getElementById('rel-lucro').textContent = fmt(faturamento - (relTab === 'dia' ? totalDesp : 0));
+  const relDespesasEl = document.getElementById('rel-despesas');
+  if (relDespesasEl) relDespesasEl.textContent = fmt(totalDesp);
+  document.getElementById('rel-lucro').textContent = fmt(faturamento - totalDesp);
 
   // Sizes
   const sizeCounts = {};
@@ -3102,13 +3274,287 @@ function handleGlobalSearch(e) {
 }
 function openTopbarMessages() { navigate('relatorios'); showToast('Aqui depois entra o envio do relatório no WhatsApp.', 'success'); }
 function openTopbarAlerts() { navigate('validades'); }
-function toggleSidebarMobile() { document.querySelector('.sidebar').classList.toggle('mobile-open'); }
+function toggleSidebarMobile() {
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const isMobile = window.matchMedia('(max-width: 900px)').matches;
+
+  if (isMobile) {
+    const willOpen = !sidebar.classList.contains('mobile-open');
+    sidebar.classList.toggle('mobile-open', willOpen);
+    if (backdrop) backdrop.classList.toggle('show', willOpen);
+    return;
+  }
+
+  document.body.classList.toggle('sidebar-collapsed');
+  localStorage.setItem('jjr_sidebarCollapsed', document.body.classList.contains('sidebar-collapsed') ? '1' : '0');
+}
+
+function closeSidebarMobile() {
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  if (sidebar) sidebar.classList.remove('mobile-open');
+  if (backdrop) backdrop.classList.remove('show');
+}
+
+(function initSidebarState(){
+  if (localStorage.getItem('jjr_sidebarCollapsed') === '1' && !window.matchMedia('(max-width: 900px)').matches) {
+    document.body.classList.add('sidebar-collapsed');
+  }
+  window.addEventListener('resize', () => {
+    if (!window.matchMedia('(max-width: 900px)').matches) closeSidebarMobile();
+  });
+})();
 
 function renderAll() {
   renderNav(); renderUserSettings(); renderPedidoOptions(); renderDashboard(); renderPedidos(); renderEstoque(); renderValidades(); renderCaixa(); renderRelatorios(); renderPrecos(); renderCardapio();
   const topAlert = document.getElementById('topbar-alert-count');
   if (topAlert) topAlert.textContent = (estoque.filter(e => e.qtd <= e.minimo).length + lotesValidade.filter(l => getValidadeStatus(l).badge !== 'badge-green').length);
 }
+
+// ═══════════════════════════════════════════════════════════
+//  RETOQUES SOLICITADOS: BUSCA, ORDEM, EXCLUSÃO E LUCRO
+// ═══════════════════════════════════════════════════════════
+let pedidoSearchTerm = '';
+
+function parsePtBrDate(dateStr) {
+  if (!dateStr) return null;
+  if (String(dateStr).includes('-')) {
+    const [y,m,d] = String(dateStr).split('-').map(Number);
+    return new Date(y, (m || 1) - 1, d || 1);
+  }
+  const [d,m,y] = String(dateStr).split('/').map(Number);
+  return new Date(y, (m || 1) - 1, d || 1);
+}
+
+function isDateInPeriod(dateStr, tab) {
+  const dt = parsePtBrDate(dateStr);
+  if (!dt || isNaN(dt)) return false;
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (tab === 'dia') return dt.toDateString() === startToday.toDateString();
+  if (tab === 'semana') {
+    const weekAgo = new Date(startToday.getTime() - 7*24*60*60*1000);
+    return dt >= weekAgo && dt <= now;
+  }
+  if (tab === 'mes') return dt.getMonth() === now.getMonth() && dt.getFullYear() === now.getFullYear();
+  return true;
+}
+
+function filterPedidos(tab) {
+  return pedidos.filter(p => isDateInPeriod(p.date, tab));
+}
+
+function filterDespesas(tab) {
+  return despesas.filter(d => isDateInPeriod(d.data, tab));
+}
+
+function filterPedidoItems(value) {
+  pedidoSearchTerm = String(value || '').trim().toLowerCase();
+  renderPedidoOptions();
+}
+
+function clearPedidoSearch() {
+  pedidoSearchTerm = '';
+  const input = document.getElementById('pedido-item-search');
+  if (input) input.value = '';
+  renderPedidoOptions();
+}
+
+function itemMatchesPedidoSearch(item) {
+  if (!pedidoSearchTerm) return true;
+  const hay = `${item.nome || ''} ${item.key || ''} ${item.emoji || ''}`.toLowerCase();
+  return hay.includes(pedidoSearchTerm);
+}
+
+function renderPedidoOptions() {
+  const sizesEl = document.getElementById('size-selector');
+  const adsEl = document.getElementById('adicionais-selector');
+  if (sizesEl) {
+    const produtos = getProdutosAtivos().filter(itemMatchesPedidoSearch);
+    sizesEl.innerHTML = produtos.length ? produtos.map(item => `<div class="size-btn" onclick="selectSize('${item.key}')" data-size="${item.key}">
+      <span class="size-label">${item.emoji || '🍧'} ${item.nome}</span><div class="size-price">${fmt(Number(item.preco) || 0)}</div>
+    </div>`).join('') : `<div class="empty-state" style="grid-column:1/-1;padding:20px"><div class="empty-text">Nenhum produto encontrado</div><div class="empty-sub">Tente outro termo ou cadastre o item no Cardápio.</div></div>`;
+  }
+  if (adsEl) {
+    const adicionais = getAdicionaisAtivos().filter(itemMatchesPedidoSearch);
+    adsEl.innerHTML = adicionais.length ? adicionais.map(item => `<div class="adicional-btn" onclick="toggleAdicional('${item.key}')" data-ad="${item.key}">${item.emoji || '➕'} ${item.nome}<br><small>+${fmt(Number(item.preco) || 0)}</small></div>`).join('') : `<div class="empty-state" style="grid-column:1/-1;padding:20px"><div class="empty-text">Nenhum adicional encontrado</div></div>`;
+  }
+  if (currentSize) {
+    const selected = document.querySelector(`[data-size="${CSS.escape(currentSize)}"]`);
+    if (selected) selected.classList.add('selected');
+  }
+  document.querySelectorAll('.adicional-btn').forEach(b => b.classList.toggle('selected', currentAdicionais.includes(b.dataset.ad)));
+}
+
+function moveCardapioItem(id, direction) {
+  const idx = cardapio.findIndex(i => i.id === id);
+  if (idx < 0) return;
+  const tipo = cardapio[idx].tipo;
+  const sameTypeIndexes = cardapio.map((item, index) => item.tipo === tipo ? index : -1).filter(index => index >= 0);
+  const pos = sameTypeIndexes.indexOf(idx);
+  const targetPos = pos + direction;
+  if (targetPos < 0 || targetPos >= sameTypeIndexes.length) return;
+  const targetIdx = sameTypeIndexes[targetPos];
+  [cardapio[idx], cardapio[targetIdx]] = [cardapio[targetIdx], cardapio[idx]];
+  saveData('cardapio', cardapio);
+  renderAll();
+  showToast('Ordem do cardápio salva!', 'success');
+}
+
+function saveCardapioOrderFromRows(tipo, tbody) {
+  const orderedIds = Array.from(tbody.querySelectorAll('tr[data-id]')).map(tr => Number(tr.dataset.id));
+  const other = cardapio.filter(i => i.tipo !== tipo);
+  const ordered = orderedIds.map(id => cardapio.find(i => i.id === id)).filter(Boolean);
+  cardapio = tipo === 'produto'
+    ? [...ordered, ...other]
+    : [...cardapio.filter(i => i.tipo !== tipo), ...ordered];
+  saveData('cardapio', cardapio);
+  renderAll();
+  showToast('Ordem do cardápio salva!', 'success');
+}
+
+function setupCardapioTableDrag() {
+  ['tabela-cardapio-produtos','tabela-cardapio-adicionais'].forEach(id => {
+    const tbody = document.getElementById(id);
+    if (!tbody) return;
+    let dragged = null;
+    tbody.querySelectorAll('tr[data-id]').forEach(row => {
+      row.addEventListener('dragstart', e => { dragged = row; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+      row.addEventListener('dragend', () => {
+        if (!dragged) return;
+        const tipo = id.includes('produtos') ? 'produto' : 'adicional';
+        dragged.classList.remove('dragging');
+        dragged = null;
+        saveCardapioOrderFromRows(tipo, tbody);
+      });
+      row.addEventListener('dragover', e => {
+        e.preventDefault();
+        if (!dragged || dragged === row) return;
+        const rect = row.getBoundingClientRect();
+        const after = e.clientY > rect.top + rect.height / 2;
+        tbody.insertBefore(dragged, after ? row.nextSibling : row);
+      });
+    });
+  });
+}
+
+function renderCardapio() {
+  const prodTbody = document.getElementById('tabela-cardapio-produtos');
+  const addTbody = document.getElementById('tabela-cardapio-adicionais');
+  if (!prodTbody || !addTbody) return;
+  const renderRows = tipo => {
+    const items = cardapio.filter(i => i.tipo === tipo);
+    return items.map((item, idx) => `<tr class="cardapio-row" draggable="true" data-id="${item.id}">
+      <td class="cardapio-order-cell">
+        <button class="order-move-btn" title="Subir" onclick="moveCardapioItem(${item.id},-1)">↑</button>
+        <button class="order-move-btn" title="Descer" onclick="moveCardapioItem(${item.id},1)">↓</button>
+        <span class="drag-mini" title="Também dá para arrastar">⋮⋮</span>
+      </td>
+      <td><div class="cardapio-item-name"><span class="cardapio-emoji">${item.emoji || '🍧'}</span><span>${item.nome}<br><small style="font-weight:500;color:var(--text3)">${item.key}</small></span></div></td>
+      <td style="font-weight:900;color:var(--lilac)">${fmt(Number(item.preco) || 0)}</td>
+      <td><span class="badge ${item.ativo ? 'badge-green':'badge-gray'}">${item.ativo ? 'Ativo':'Oculto'}</span></td>
+      <td><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-secondary btn-xs" onclick="openCardapioModal(${item.id})">✎</button><button class="btn btn-secondary btn-xs" onclick="toggleCardapioAtivo(${item.id})">${item.ativo ? 'Ocultar':'Ativar'}</button><button class="btn btn-danger btn-xs" onclick="deleteCardapioItem(${item.id})">✕</button></div></td>
+    </tr>`).join('') || `<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:24px">Nenhum item cadastrado</td></tr>`;
+  };
+  prodTbody.innerHTML = renderRows('produto');
+  addTbody.innerHTML = renderRows('adicional');
+  document.getElementById('count-cardapio-produtos').textContent = cardapio.filter(i=>i.tipo==='produto').length + ' itens';
+  document.getElementById('count-cardapio-adicionais').textContent = cardapio.filter(i=>i.tipo==='adicional').length + ' itens';
+  setupCardapioTableDrag();
+}
+
+function restaurarEstoqueDoPedido(pedido) {
+  if (!pedido) return;
+  const { size, adicionais = [], qtd = 1 } = pedido;
+  if (STOCK_MAP.acai && STOCK_MAP.acai[size]) updateEstoqueKey('acai', STOCK_MAP.acai[size] * qtd);
+  const copoKey = { '300ml': 'copo300', '500ml': 'copo500', '700ml': 'copo700', '1L': 'copo1L' }[size];
+  if (copoKey) updateEstoqueKey(copoKey, qtd);
+  updateEstoqueKey('colher', qtd);
+  updateEstoqueKey('tampa', qtd);
+  adicionais.forEach(ad => { const consumption = STOCK_MAP[ad]; if (consumption) updateEstoqueKey(ad, consumption * qtd); });
+  saveData('estoque', estoque);
+}
+
+function deletePedido(id) {
+  const pedido = pedidos.find(p => p.id === id);
+  if (!pedido) return;
+  if (!confirm(`Apagar o pedido #${String(pedido.id).padStart(3,'0')}? Isso remove dos relatórios.`)) return;
+  if (confirm('Deseja devolver os itens consumidos para o estoque?\n\nUse SIM quando o pedido foi teste/erro e baixou estoque indevidamente.')) {
+    restaurarEstoqueDoPedido(pedido);
+  }
+  pedidos = pedidos.filter(p => p.id !== id);
+  saveData('pedidos', pedidos);
+  renderAll();
+  showToast('Pedido removido dos relatórios', 'error');
+}
+
+function renderRelPedidosPeriodo(filtered) {
+  const tbody = document.getElementById('rel-pedidos-periodo');
+  const count = document.getElementById('rel-count-pedidos-periodo');
+  if (!tbody) return;
+  if (count) count.textContent = filtered.length + ' pedidos';
+  tbody.innerHTML = filtered.length ? filtered.map(p => {
+    const pgtoLabel = { dinheiro: '💵 Dinheiro', pix: '📱 PIX', debito: '💳 Débito', credito: '💳 Crédito' }[p.pgto] || p.pgto;
+    return `<tr>
+      <td style="font-weight:800;color:var(--text)">#${String(p.id).padStart(3,'0')}</td>
+      <td><div>${p.date || '-'}</div><div class="muted-small">${p.hora || '-'}</div></td>
+      <td>${getItemEmoji(p.size)} ${getItemName(p.size)}<br><span class="muted-small">${(p.adicionais||[]).map(a=>getItemName(a)).join(', ') || 'Sem adicionais'}</span></td>
+      <td>${p.qtd || 1}</td>
+      <td>${pgtoLabel}</td>
+      <td style="font-weight:900;color:var(--lilac)">${fmt(Number(p.total)||0)}</td>
+      <td><div class="historico-actions"><button class="btn btn-danger btn-xs" onclick="deletePedido(${p.id})">Apagar</button></div></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px">Nenhum pedido nesse período</td></tr>`;
+}
+
+function renderRelatorios() {
+  const filtered = filterPedidos(relTab);
+  // O relatório agora usa a mesma regra da aba Caixa:
+  // lucro = vendas do período - TOTAL de despesas/dívidas registradas.
+  // Assim não aparece um valor descontado “do nada” no semanal/mensal.
+  const faturamento = filtered.reduce((a, p) => a + (Number(p.total) || 0), 0);
+  const totalDesp = despesas.reduce((a, d) => a + (Number(d.valor) || 0), 0);
+  const ticket = filtered.length ? faturamento / filtered.length : 0;
+
+  document.getElementById('rel-faturamento').textContent = fmt(faturamento);
+  document.getElementById('rel-pedidos').textContent = filtered.length;
+  document.getElementById('rel-ticket').textContent = fmt(ticket);
+  const relDespesasEl = document.getElementById('rel-despesas');
+  if (relDespesasEl) relDespesasEl.textContent = fmt(totalDesp);
+  document.getElementById('rel-lucro').textContent = fmt(faturamento - totalDesp);
+
+  const sizeCounts = {};
+  filtered.forEach(p => { sizeCounts[p.size] = (sizeCounts[p.size] || 0) + (Number(p.qtd) || 1); });
+  const maxS = Math.max(...Object.values(sizeCounts), 1);
+  document.getElementById('rel-produtos').innerHTML = Object.entries(sizeCounts)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([k,v]) => `<div class="metric-item"><div class="metric-label">${getItemName(k)}</div><div class="metric-bar"><div class="metric-fill" style="width:${v/maxS*100}%;background:linear-gradient(to right,var(--purple),var(--lilac))"></div></div><div class="metric-val">${v}</div></div>`).join('') || '<div style="color:var(--text3);font-size:13px;padding:8px 0">Sem dados</div>';
+
+  const adCounts = {};
+  filtered.forEach(p => (p.adicionais || []).forEach(a => { adCounts[a] = (adCounts[a] || 0) + (Number(p.qtd) || 1); }));
+  const maxA = Math.max(...Object.values(adCounts), 1);
+  document.getElementById('rel-adicionais').innerHTML = Object.entries(adCounts)
+    .sort((a,b)=>b[1]-a[1]).slice(0,8)
+    .map(([k,v]) => `<div class="metric-item"><div class="metric-label">${getItemName(k)}</div><div class="metric-bar"><div class="metric-fill" style="width:${v/maxA*100}%;background:linear-gradient(to right,var(--accent),var(--lilac))"></div></div><div class="metric-val">${v}</div></div>`).join('') || '<div style="color:var(--text3);font-size:13px;padding:8px 0">Sem dados</div>';
+
+  const pgtos = { dinheiro: 0, pix: 0, debito: 0, credito: 0 };
+  filtered.forEach(p => { pgtos[p.pgto] = (pgtos[p.pgto] || 0) + (Number(p.total) || 0); });
+  const maxP = Math.max(...Object.values(pgtos), 1);
+  const pgtoNames = { dinheiro: '💵 Dinheiro', pix: '📱 PIX', debito: '💳 Débito', credito: '💳 Crédito' };
+  document.getElementById('rel-pagamentos').innerHTML = Object.entries(pgtos)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([k,v]) => `<div class="metric-item"><div class="metric-label">${pgtoNames[k] || k}</div><div class="metric-bar"><div class="metric-fill" style="width:${v/maxP*100}%;background:linear-gradient(to right,var(--green),#7dd3fc)"></div></div><div class="metric-val">${fmt(v)}</div></div>`).join('');
+
+  const hours = {};
+  filtered.forEach(p => { const h = String(p.hora || '00:00').split(':')[0]; hours[h] = (hours[h] || 0) + 1; });
+  const maxH = Math.max(...Object.values(hours), 1);
+  const chart = document.getElementById('rel-horarios');
+  if (chart) chart.innerHTML = Object.entries(hours).sort((a,b)=>Number(a[0])-Number(b[0])).map(([h,v]) => `<div class="bar-col"><div class="bar" style="height:${Math.max(8, v/maxH*100)}%"></div><div class="bar-label">${h}h</div></div>`).join('') || '<div style="color:var(--text3);font-size:13px;padding:8px 0">Sem dados</div>';
+
+  renderRelPedidosPeriodo(filtered);
+}
+
 // ═══════════════════════════════════════════════════════════
 //  CLOCK
 // ═══════════════════════════════════════════════════════════
