@@ -778,6 +778,174 @@
   .empty-text { font-size: 15px; font-weight: 500; margin-bottom: 4px; color: var(--text2); }
   .empty-sub { font-size: 13px; }
 
+
+  /* ── INTERFACE 2.0 / PREÇOS ── */
+  .hero-panel {
+    background:
+      radial-gradient(circle at top left, rgba(168,85,247,0.28), transparent 34%),
+      linear-gradient(135deg, rgba(124,58,237,0.18), rgba(217,70,239,0.08));
+    border: 1px solid rgba(124,58,237,0.34);
+    border-radius: 22px;
+    padding: 26px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--lilac);
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.6px;
+  }
+
+  .hero-sub {
+    color: var(--text2);
+    font-size: 14px;
+    margin-top: 6px;
+    max-width: 620px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .topbar-action {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    border-radius: 12px;
+    padding: 9px 13px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .2s;
+  }
+
+  .topbar-action:hover {
+    color: var(--text);
+    border-color: rgba(124,58,237,.45);
+    transform: translateY(-1px);
+  }
+
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .price-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    transition: all .2s;
+  }
+
+  .price-card:hover {
+    border-color: rgba(124,58,237,.45);
+    transform: translateY(-1px);
+  }
+
+  .price-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .price-name {
+    font-weight: 800;
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  .price-tag {
+    font-size: 11px;
+    color: var(--lilac);
+    background: rgba(124,58,237,.14);
+    border: 1px solid rgba(124,58,237,.28);
+    border-radius: 999px;
+    padding: 3px 8px;
+    white-space: nowrap;
+  }
+
+  .price-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 10px;
+  }
+
+  .price-input-wrap span {
+    color: var(--text3);
+    font-weight: 800;
+    font-size: 13px;
+  }
+
+  .price-input {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .price-preview {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  .settings-note {
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.22);
+    color: var(--green);
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  @media (max-width: 1200px) {
+    .price-grid { grid-template-columns: repeat(3,1fr); }
+    .hero-panel { align-items: flex-start; flex-direction: column; }
+    .hero-actions { justify-content: flex-start; }
+  }
+
+  @media (max-width: 768px) {
+    .price-grid { grid-template-columns: repeat(2,1fr); }
+    .hero-title { font-size: 22px; }
+  }
+
+  @media (max-width: 520px) {
+    .price-grid { grid-template-columns: 1fr; }
+  }
+
+
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     .sidebar { display: none; }
@@ -788,6 +956,130 @@
     .content { padding: 16px; }
     .topbar { padding: 0 16px; }
   }
+
+
+/* ═══════════════════════════════════════════════════════════
+   JJR PREMIUM UI V3 — interface inspirada no mockup enviado
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --bg:#f7f7fc;
+  --surface:#ffffff;
+  --surface2:#f8f7ff;
+  --surface3:#f0ecff;
+  --border:#e7e6f2;
+  --purple:#6f2de2;
+  --purple-light:#8d35ef;
+  --lilac:#6f2de2;
+  --accent:#a855f7;
+  --green:#0ea64b;
+  --green-soft:#e8faef;
+  --red:#d92942;
+  --red-soft:#fff0f2;
+  --yellow:#f08a18;
+  --yellow-soft:#fff4df;
+  --blue:#1f6feb;
+  --blue-soft:#eaf2ff;
+  --text:#10112f;
+  --text2:#3d4168;
+  --text3:#777b9f;
+  --font-display:'Syne', sans-serif;
+  --font-body:'DM Sans', sans-serif;
+  --radius:22px;
+  --radius-sm:14px;
+  --shadow:0 18px 45px rgba(20,20,70,.075);
+  --shadow-lg:0 25px 70px rgba(77,37,150,.18);
+}
+body{background:var(--bg);color:var(--text);}
+.sidebar{
+  width:280px;
+  background:radial-gradient(circle at 0 0,#5b1abd 0%,#1f103f 43%,#10091f 100%);
+  border-right:0;
+  padding:0 18px 22px;
+  box-shadow:16px 0 45px rgba(16,9,31,.1);
+}
+.sidebar::before{display:none;}
+.logo{border-bottom:0;padding:26px 4px 22px;display:flex;align-items:center;gap:14px;}
+.logo-icon{width:64px;height:64px;border-radius:22px;font-size:32px;margin:0;background:linear-gradient(135deg,#8d35ef,#47118d);box-shadow:0 18px 40px rgba(111,45,226,.42);}
+.logo-name{font-size:34px;letter-spacing:-1.7px;line-height:.85;color:#fff;}
+.logo-sub{font-size:14px;letter-spacing:2.3px;color:#ff4dd3;font-weight:800;margin-top:7px;}
+.nav{padding:2px 0 14px;gap:8px;}
+.nav-item{padding:14px 16px;border-radius:14px;color:rgba(255,255,255,.86);font-size:15px;font-weight:700;border:0;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;transform:translateX(2px);}
+.nav-item.active{background:linear-gradient(135deg,#7d35ed,#5d1fc2);color:#fff;box-shadow:0 14px 28px rgba(63,20,153,.34);border:0;}
+.nav-item.active::before{display:none;}
+.nav-icon{font-size:19px;width:24px;}
+.nav-badge{background:#8d35ef;color:#fff;}
+.sidebar-footer{margin-top:auto;border-top:1px solid rgba(255,255,255,.11);padding:18px 10px 0;color:#fff;}
+.clock{color:#fff}.date-str{color:rgba(255,255,255,.55)}
+.main{background:var(--bg);}
+.topbar{height:88px;background:rgba(255,255,255,.82);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;gap:18px;justify-content:flex-start;box-shadow:0 10px 30px rgba(20,20,70,.03);}
+.page-title{display:none;}
+.premium-menu{width:44px;height:44px;border:0;background:transparent;border-radius:14px;font-size:26px;color:#36405e;cursor:pointer;}
+.premium-welcome{min-width:230px;}
+.premium-welcome strong{display:block;font-size:18px;color:var(--text);font-weight:900;}
+.premium-welcome span{display:block;font-size:14px;color:var(--text3);margin-top:3px;}
+.premium-search{position:relative;flex:1;max-width:560px;margin:0 auto;}
+.premium-search input{width:100%;height:52px;border:1px solid var(--border);border-radius:17px;background:#fff;padding:0 86px 0 50px;color:var(--text);font-size:14px;outline:none;box-shadow:0 6px 18px rgba(20,20,70,.025);}
+.premium-search span:first-child{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:19px;color:var(--text3);}
+.premium-search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);border:0;background:#f1f0f8;color:#777b9f;border-radius:10px;padding:6px 10px;font-size:12px;font-weight:800;}
+.topbar-right{gap:12px;margin-left:0;}
+.status-pill{background:#fff;border:1px solid var(--border);height:44px;border-radius:15px;color:var(--green);box-shadow:0 8px 24px rgba(20,20,70,.055);}
+.topbar-action{height:52px;border:0;border-radius:16px;padding:0 22px;background:linear-gradient(135deg,#8d35ef,#6121cc);color:#fff;font-weight:900;font-size:15px;display:inline-flex;align-items:center;gap:9px;cursor:pointer;box-shadow:0 16px 32px rgba(106,45,224,.25);white-space:nowrap;}
+.icon-top{position:relative;width:44px;height:44px;border:0;border-radius:15px;background:#fff;color:#333552;box-shadow:0 8px 24px rgba(20,20,70,.06);font-size:18px;cursor:pointer;}
+.icon-top em{position:absolute;top:-7px;right:-4px;background:#6f2de2;color:#fff;min-width:20px;height:20px;border-radius:999px;display:grid;place-items:center;font-size:11px;font-style:normal;font-weight:900;}
+.profile-mini{display:flex;align-items:center;gap:11px;white-space:nowrap;}
+.profile-avatar{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,#ffcc80,#804000);display:grid;place-items:center;color:#fff;font-weight:900;}
+.profile-mini strong{display:block;font-size:14px}.profile-mini span{display:block;color:var(--text3);font-size:12px;}
+.content{padding:28px 32px 20px;}
+.card,.dash-card,.pedido-card,.modal{background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:var(--radius);}
+.card:hover,.dash-card:hover,.pedido-card:hover{border-color:#d8cff8;transform:translateY(-1px);}
+.card-title,.section-title{color:var(--text);}
+.card-title{font-size:15px;text-transform:none;letter-spacing:0;font-family:var(--font-body);font-weight:900;}
+.card-value,.dash-value{color:var(--text);}
+.dash-card{min-height:124px;padding:22px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
+.dash-card::after{width:90px;height:90px;opacity:.14;}
+.dash-icon{width:62px;height:62px;border-radius:19px;display:grid;place-items:center;font-size:28px;margin-bottom:12px;}
+.dash-card.purple .dash-icon{background:#f0e7ff;color:#6f2de2}.dash-card.green .dash-icon{background:#e8faef;color:#0ea64b}.dash-card.yellow .dash-icon{background:#fff4df;color:#f08a18}.dash-card.accent .dash-icon{background:#eaf2ff;color:#1f6feb}
+.dash-label{color:var(--text3);font-size:13px;letter-spacing:0;text-transform:none;font-weight:700;}
+.dash-value{font-size:27px;letter-spacing:-1px;}
+.grid-4{gap:18px}.grid-2,.grid-3,.grid-12{gap:18px;}
+.btn{border-radius:14px;font-weight:900;}
+.btn-primary{background:linear-gradient(135deg,#8d35ef,#6121cc);box-shadow:0 14px 24px rgba(106,45,224,.18);}
+.btn-secondary{background:#fff;color:var(--text2);border:1px solid var(--border);}
+.btn-danger{background:var(--red-soft);color:var(--red);border:1px solid #ffd1d7;}.btn-success{background:var(--green-soft);color:var(--green);border:1px solid #c8f5d8;}
+.form-control{background:#fff;border:1px solid var(--border);color:var(--text);border-radius:14px;}
+.form-label{color:var(--text3);}
+.table-wrap{border:1px solid var(--border);border-radius:20px;background:#fff;box-shadow:var(--shadow);}
+th{background:#fbfbff;color:var(--text3);}td{border-top:1px solid var(--border);color:var(--text2);}tr:hover td{background:#faf8ff;}
+.badge{border-radius:999px;font-weight:900;}.badge-green{background:#e8faef;color:#0ea64b;border:0}.badge-yellow{background:#fff4df;color:#f08a18;border:0}.badge-red{background:#fff0f2;color:#d92942;border:0}.badge-purple{background:#f0e7ff;color:#6f2de2;border:0}.badge-gray{background:#f2f2fa;color:#777b9f;border:0}
+.size-btn,.adicional-btn,.action-tile,.price-card{background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:0 8px 24px rgba(20,20,70,.035);color:var(--text2);}
+.size-btn:hover,.adicional-btn:hover,.price-card:hover{border-color:#d5c6ff;box-shadow:var(--shadow);}.size-btn.selected,.adicional-btn.selected{background:#f0e7ff;border-color:#8d35ef;color:#6f2de2;}
+.size-btn .size-label{color:var(--text);}.size-btn .size-price,.adicional-btn small{color:var(--text3);}
+.total-box{background:linear-gradient(135deg,#f0e7ff,#fff);border:1px solid #dfd3ff;border-radius:22px;}
+.total-value{background:linear-gradient(135deg,#6f2de2,#d946ef);-webkit-background-clip:text;background-clip:text;}
+.divider{background:var(--border);}
+.empty-state{color:var(--text3);}.empty-text{color:var(--text2);}
+.modal-overlay{background:rgba(15,12,30,.48);}.modal{max-width:520px;}
+.tabs{background:#fff;border:1px solid var(--border);box-shadow:var(--shadow);border-radius:18px;}.tab{border-radius:14px;color:var(--text3);}.tab.active{background:#f0e7ff;color:#6f2de2;box-shadow:none;}
+.toast{background:#fff;color:var(--text);border:1px solid var(--border);box-shadow:var(--shadow-lg);}
+.premium-dashboard-grid{display:grid;grid-template-columns:1.12fr 1fr 1fr;gap:18px;align-items:start;margin-top:18px;}
+.premium-bottom-grid{display:grid;grid-template-columns:1.12fr 1fr 1fr;gap:18px;align-items:start;margin-top:18px;}
+.premium-panel{padding:22px;}
+.premium-panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.premium-panel-head h3{font-size:18px;letter-spacing:-.4px;color:var(--text);}.premium-panel-head button,.premium-panel-head a{border:0;background:transparent;color:#6f2de2;font-weight:900;cursor:pointer;text-decoration:none;font-size:13px;}
+.premium-chart-value{font-size:32px;letter-spacing:-1px;color:var(--text);font-weight:900;margin:6px 0}.premium-chart-sub{color:var(--green);font-weight:900;margin-bottom:18px;}
+.premium-chart{height:190px;border-radius:18px;background:linear-gradient(180deg,rgba(111,45,226,.18),rgba(111,45,226,0)),repeating-linear-gradient(to right,transparent 0 78px,rgba(110,113,145,.12) 79px 80px),repeating-linear-gradient(to top,transparent 0 48px,rgba(110,113,145,.12) 49px 50px);position:relative;overflow:hidden;margin-bottom:16px;}
+.premium-chart svg{width:100%;height:100%;position:absolute;inset:0;}
+.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini-stat{border:1px solid var(--border);border-radius:16px;padding:15px;background:#fff}.mini-stat span{display:block;color:var(--text3);font-size:12px;margin-bottom:6px}.mini-stat strong{font-size:18px;color:var(--text);}
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.action-tile{min-height:112px;display:grid;place-items:center;gap:8px;cursor:pointer;font-weight:900;text-align:center;color:var(--text);padding:14px;}.action-tile:hover{transform:translateY(-3px);border-color:#d5c6ff;box-shadow:var(--shadow);}.action-tile span{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:#f0e7ff;font-size:25px;}
+.alert-list{display:grid;gap:12px}.premium-alert{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:14px;padding:16px;border-radius:17px;border:1px solid;font-weight:700}.premium-alert strong{display:block;font-size:14px}.premium-alert span{display:block;font-size:12px;color:var(--text3);margin-top:3px}.premium-alert.red{background:var(--red-soft);border-color:#ffd1d7;color:#9c1022}.premium-alert.orange{background:var(--yellow-soft);border-color:#ffe2af;color:#9a5200}.premium-alert.blue{background:var(--blue-soft);border-color:#cfe0ff;color:#164da5}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.product-card{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:17px;padding:12px;background:#fff}.rank{width:25px;height:25px;border-radius:8px;background:#6f2de2;color:#fff;display:grid;place-items:center;font-weight:900;font-size:12px}.prod-img{width:48px;height:48px;border-radius:15px;background:#f0e7ff;display:grid;place-items:center;font-size:25px}.product-card strong{display:block;font-size:13px;color:var(--text)}.product-card span{display:block;color:var(--text3);font-size:12px;margin:3px 0}.product-card b{color:var(--text);font-size:13px;}
+.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.price-card{padding:16px}.price-card label{display:block;color:var(--text);font-weight:900;margin-bottom:8px}.price-card input{font-size:18px;font-weight:900;text-align:center;}
+::-webkit-scrollbar-track{background:#f8f7ff}::-webkit-scrollbar-thumb{background:#d7d1eb}
+@media(max-width:1320px){.premium-dashboard-grid,.premium-bottom-grid{grid-template-columns:1fr 1fr}.premium-chart-panel,.premium-alert-panel{grid-column:auto}.price-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.sidebar{display:none}.topbar{padding:0 16px}.premium-search,.icon-top,.profile-mini{display:none}.premium-dashboard-grid,.premium-bottom-grid,.grid-4,.grid-3,.grid-2,.grid-12{grid-template-columns:1fr}.content{padding:18px 16px}.action-grid,.product-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.premium-welcome span{display:none}.topbar-action{padding:0 14px}.action-grid,.product-grid,.mini-stats,.price-grid{grid-template-columns:1fr}.dash-value,.premium-chart-value{font-size:24px}}
+
 </style>
 </head>
 <body>
@@ -810,9 +1102,9 @@
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="logo">
-    <div class="logo-icon">🍇</div>
-    <div class="logo-name">JJR Sistema</div>
-    <div class="logo-sub">Açaí & Gestão</div>
+    <div class="logo-icon">🫐</div>
+    <div><div class="logo-name">JJR</div>
+    <div class="logo-sub">SISTEMA</div></div>
   </div>
 
   <nav class="nav">
@@ -839,6 +1131,10 @@
       <span class="nav-icon">💰</span>
       <span>Caixa</span>
     </div>
+    <div class="nav-item" onclick="navigate('precos')">
+      <span class="nav-icon">🏷️</span>
+      <span>Preços</span>
+    </div>
     <div class="nav-item" onclick="navigate('relatorios')">
       <span class="nav-icon">📊</span>
       <span>Relatórios</span>
@@ -854,62 +1150,140 @@
 <!-- MAIN -->
 <main class="main">
   <div class="topbar">
-    <div class="page-title" id="page-title">Dashboard</div>
+    <button class="premium-menu">☰</button>
+    <div class="premium-welcome">
+      <strong>Olá, João! 👋</strong>
+      <span>Bem-vindo ao JJR Sistema</span>
+    </div>
+    <div class="premium-search">
+      <span>⌕</span>
+      <input type="text" placeholder="Buscar pedido, cliente ou produto...">
+      <kbd>Ctrl + K</kbd>
+    </div>
     <div class="topbar-right">
-      <div class="status-pill">
-        <div class="status-dot"></div>
-        Loja Aberta
+      <button class="topbar-action" onclick="navigate('pedidos')">＋ Novo Pedido</button>
+      <button class="icon-top" title="Mensagens">💬<em>3</em></button>
+      <button class="icon-top" title="Alertas">🔔<em>7</em></button>
+      <div class="profile-mini">
+        <div class="profile-avatar">J</div>
+        <div><strong>João</strong><span>Administrador</span></div>
       </div>
     </div>
+    <div class="page-title" id="page-title">Dashboard</div>
   </div>
 
   <div class="content">
 
     <!-- ══ DASHBOARD ══ -->
-    <div class="page active" id="page-dashboard">
-      <div class="grid-4" style="margin-bottom:20px">
+    
+<div class="page active" id="page-dashboard">
+      <div class="grid-4" style="margin-bottom:0">
         <div class="dash-card purple">
-          <div class="dash-icon">💵</div>
-          <div class="dash-value" id="dash-faturamento">R$ 0,00</div>
-          <div class="dash-label">Faturamento Hoje</div>
-        </div>
-        <div class="dash-card green">
           <div class="dash-icon">🛒</div>
           <div class="dash-value" id="dash-pedidos">0</div>
-          <div class="dash-label">Pedidos Hoje</div>
+          <div class="dash-label">Pedidos do Dia</div>
+          <div class="card-sub" style="color:var(--green);font-weight:900">+15% em relação a ontem</div>
         </div>
-        <div class="dash-card yellow">
-          <div class="dash-icon">🎯</div>
-          <div class="dash-value" id="dash-ticket">R$ 0,00</div>
-          <div class="dash-label">Ticket Médio</div>
+        <div class="dash-card green">
+          <div class="dash-icon">💵</div>
+          <div class="dash-value" id="dash-faturamento">R$ 0,00</div>
+          <div class="dash-label">Faturamento</div>
+          <div class="card-sub" style="color:var(--green);font-weight:900">+18% em relação a ontem</div>
         </div>
         <div class="dash-card accent">
+          <div class="dash-icon">📦</div>
+          <div class="dash-value" id="dash-ticket">R$ 0,00</div>
+          <div class="dash-label">Ticket Médio</div>
+          <div class="card-sub">Calculado pelos pedidos de hoje</div>
+        </div>
+        <div class="dash-card yellow">
           <div class="dash-icon">⏳</div>
           <div class="dash-value" id="dash-preparo">0</div>
           <div class="dash-label">Em Preparo</div>
+          <div class="card-sub">Pedidos abertos agora</div>
         </div>
       </div>
 
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">📋 Últimos Pedidos</div>
+      <div class="premium-dashboard-grid">
+        <div class="card premium-panel">
+          <div class="premium-panel-head">
+            <h3>Pedidos Recentes</h3>
+            <button onclick="navigate('pedidos')">Ver todos</button>
+          </div>
           <div id="dash-ultimos-pedidos">
-            <div class="empty-state" style="padding:24px">
-              <div class="empty-icon">🍇</div>
-              <div class="empty-text">Nenhum pedido ainda</div>
-            </div>
+            <div class="empty-state" style="padding:24px"><div class="empty-icon">🍇</div><div class="empty-text">Nenhum pedido ainda</div></div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-title">📦 Alertas de Estoque</div>
+
+        <div class="card premium-panel">
+          <div class="premium-panel-head">
+            <h3>Alertas de Estoque</h3>
+            <button onclick="navigate('estoque')">Ver todos</button>
+          </div>
           <div id="dash-alertas-estoque">
-            <div class="empty-state" style="padding:24px">
-              <div class="empty-icon">✅</div>
-              <div class="empty-text">Estoque em dia!</div>
-            </div>
+            <div class="empty-state" style="padding:24px"><div class="empty-icon">✅</div><div class="empty-text">Estoque em dia!</div></div>
+          </div>
+        </div>
+
+        <div class="card premium-panel premium-chart-panel">
+          <div class="premium-panel-head">
+            <h3>Vendas do Dia</h3>
+            <button>Hoje</button>
+          </div>
+          <div class="premium-chart-value" id="premium-chart-value">R$ 0,00</div>
+          <div class="premium-chart-sub">+18% em relação a ontem</div>
+          <div class="premium-chart">
+            <svg viewBox="0 0 500 200" preserveAspectRatio="none">
+              <polyline points="10,180 50,168 90,150 130,142 170,120 210,100 250,88 290,64 330,58 370,36 410,24 455,14 490,6" fill="none" stroke="#6f2de2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="410" cy="24" r="7" fill="white" stroke="#6f2de2" stroke-width="4" />
+            </svg>
+          </div>
+          <div class="mini-stats">
+            <div class="mini-stat"><span>Ticket Médio</span><strong id="premium-ticket-mini">R$ 0,00</strong></div>
+            <div class="mini-stat"><span>Pedidos</span><strong id="premium-pedidos-mini">0</strong></div>
           </div>
         </div>
       </div>
+
+      <div class="premium-bottom-grid">
+        <div class="card premium-panel">
+          <div class="premium-panel-head">
+            <h3>Mais Vendidos</h3>
+            <button onclick="navigate('relatorios')">Ver todos</button>
+          </div>
+          <div class="product-grid" id="premium-mais-vendidos">
+            <div class="product-card"><div class="rank">1</div><div class="prod-img">🍧</div><div><strong>Açaí 500ml</strong><span>0 vendidos</span><b>R$ 0,00</b></div></div>
+            <div class="product-card"><div class="rank">2</div><div class="prod-img">🥤</div><div><strong>Açaí 300ml</strong><span>0 vendidos</span><b>R$ 0,00</b></div></div>
+            <div class="product-card"><div class="rank">3</div><div class="prod-img">🍨</div><div><strong>Açaí 700ml</strong><span>0 vendidos</span><b>R$ 0,00</b></div></div>
+            <div class="product-card"><div class="rank">4</div><div class="prod-img">🫐</div><div><strong>Açaí 1L</strong><span>0 vendidos</span><b>R$ 0,00</b></div></div>
+          </div>
+        </div>
+
+        <div class="card premium-panel">
+          <div class="premium-panel-head"><h3>Ações Rápidas</h3></div>
+          <div class="action-grid">
+            <button class="action-tile" onclick="navigate('pedidos')"><span>🛒</span>Novo Pedido</button>
+            <button class="action-tile" onclick="navigate('caixa')"><span>💵</span>Abrir Caixa</button>
+            <button class="action-tile" onclick="openModalEstoque()"><span>📥</span>Entrada Estoque</button>
+            <button class="action-tile" onclick="navigate('estoque')"><span>📦</span>Consultar Estoque</button>
+            <button class="action-tile" onclick="navigate('relatorios')"><span>📊</span>Relatórios</button>
+            <button class="action-tile" onclick="navigate('precos')"><span>🏷️</span>Preços</button>
+          </div>
+        </div>
+
+        <div class="card premium-panel premium-alert-panel">
+          <div class="premium-panel-head">
+            <h3>Alertas</h3>
+            <button onclick="navigate('validades')">Ver todos</button>
+          </div>
+          <div class="alert-list" id="premium-alerts">
+            <div class="premium-alert red"><div>❗</div><div><strong>Validades próximas</strong><span>Verificar lotes cadastrados</span></div><div>›</div></div>
+            <div class="premium-alert orange"><div>⚠️</div><div><strong>Produtos com estoque baixo</strong><span>Repor estoque</span></div><div>›</div></div>
+            <div class="premium-alert blue"><div>ℹ️</div><div><strong>Sistema pronto</strong><span>Dados salvos local/Supabase</span></div><div>›</div></div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- ══ PEDIDOS ══ -->
@@ -1238,6 +1612,35 @@
       </div>
     </div>
 
+
+    <!-- ══ PREÇOS / CARDÁPIO ══ -->
+    <div class="page" id="page-precos">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Preços do Cardápio</div>
+          <div style="font-size:13px;color:var(--text3);margin-top:4px">Altere os valores usados no cálculo dos pedidos. As mudanças ficam salvas.</div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-secondary btn-sm" onclick="resetPrecosPadrao()">Restaurar padrão</button>
+          <button class="btn btn-primary btn-sm" onclick="savePrecos()">Salvar preços</button>
+        </div>
+      </div>
+
+      <div class="settings-note">
+        ✅ Agora os preços não ficam mais travados no código. Você pode mudar aqui e o sistema recalcula pedidos, troco, caixa e relatórios usando os novos valores.
+      </div>
+
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title">🥤 Tamanhos do Açaí</div>
+        <div class="price-grid" id="precos-tamanhos" style="margin-top:14px"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🍓 Adicionais</div>
+        <div class="price-grid" id="precos-adicionais" style="margin-top:14px"></div>
+      </div>
+    </div>
+
     <!-- ══ RELATÓRIOS ══ -->
     <div class="page" id="page-relatorios">
       <div class="tabs">
@@ -1353,11 +1756,13 @@
 //  DATA LAYER
 // ═══════════════════════════════════════════════════════════
 
-const PRICES = {
+const DEFAULT_PRICES = {
   '300ml': 10, '500ml': 15, '700ml': 20, '1L': 28,
   banana: 2, morango: 3, leite_condensado: 2, leite_po: 2,
   granola: 2, pacoca: 2, nutella: 5, ovomaltine: 3
 };
+
+let PRICES = loadData('precos', DEFAULT_PRICES);
 
 const ADICIONAL_NAMES = {
   banana: 'Banana', morango: 'Morango', leite_condensado: 'L. Condensado',
@@ -1413,7 +1818,7 @@ function loadData(key, def) {
 
 async function loadCloudData() {
   try {
-    const keys = ['pedidos', 'estoque', 'despesas', 'lotesValidade', 'nextPedidoId', 'nextEstoqueId', 'nextDespesaId', 'nextLoteId'];
+    const keys = ['pedidos', 'estoque', 'despesas', 'lotesValidade', 'precos', 'nextPedidoId', 'nextEstoqueId', 'nextDespesaId', 'nextLoteId'];
     const { data, error } = await db.from('jjr_store').select('key,value').in('key', keys);
     if (error) throw error;
     (data || []).forEach(row => {
@@ -2034,6 +2439,7 @@ function setRelTab(tab, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   renderRelatorios();
+  renderPrecos();
 }
 
 function filterPedidos(tab) {
@@ -2141,6 +2547,27 @@ function renderDashboard() {
   document.getElementById('dash-pedidos').textContent = todayPedidos.length;
   document.getElementById('dash-ticket').textContent = fmt(ticket);
   document.getElementById('dash-preparo').textContent = emPreparo;
+  const premiumChartValue = document.getElementById('premium-chart-value');
+  const premiumTicketMini = document.getElementById('premium-ticket-mini');
+  const premiumPedidosMini = document.getElementById('premium-pedidos-mini');
+  if (premiumChartValue) premiumChartValue.textContent = fmt(faturamento);
+  if (premiumTicketMini) premiumTicketMini.textContent = fmt(ticket);
+  if (premiumPedidosMini) premiumPedidosMini.textContent = todayPedidos.length;
+
+  const mv = document.getElementById('premium-mais-vendidos');
+  if (mv) {
+    const counts = {};
+    todayPedidos.forEach(p => {
+      counts[p.size] = counts[p.size] || {qtd:0,total:0};
+      counts[p.size].qtd += p.qtd;
+      counts[p.size].total += p.total;
+    });
+    const order = Object.entries(counts).sort((a,b)=>b[1].qtd-a[1].qtd).slice(0,4);
+    const fallback = [['500ml',{qtd:0,total:0}],['300ml',{qtd:0,total:0}],['700ml',{qtd:0,total:0}],['1L',{qtd:0,total:0}]];
+    const list = order.length ? order : fallback;
+    const icons = {'300ml':'🥤','500ml':'🍧','700ml':'🍨','1L':'🫐'};
+    mv.innerHTML = list.map(([size,info],i)=>`<div class="product-card"><div class="rank">${i+1}</div><div class="prod-img">${icons[size]||'🍧'}</div><div><strong>Açaí ${size}</strong><span>${info.qtd} vendidos</span><b>${fmt(info.total)}</b></div></div>`).join('');
+  }
 
   // Últimos pedidos
   const lastPedidos = todayPedidos.slice(0, 4);
@@ -2180,7 +2607,7 @@ function renderDashboard() {
 // ═══════════════════════════════════════════════════════════
 //  NAVIGATION
 // ═══════════════════════════════════════════════════════════
-const pageNames = { dashboard: 'Dashboard', pedidos: 'Pedidos', estoque: 'Estoque', validades: 'Validades', caixa: 'Caixa & Financeiro', relatorios: 'Relatórios' };
+const pageNames = { dashboard: 'Dashboard', pedidos: 'Pedidos', estoque: 'Estoque', validades: 'Validades', caixa: 'Caixa & Financeiro', precos: 'Preços do Cardápio', relatorios: 'Relatórios' };
 
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -2217,6 +2644,94 @@ function showToast(msg, type='success') {
   setTimeout(() => { t.style.animation = 'fadeOut 0.3s ease forwards'; setTimeout(() => t.remove(), 300); }, 2800);
 }
 
+
+// ═══════════════════════════════════════════════════════════
+//  PREÇOS / CARDÁPIO
+// ═══════════════════════════════════════════════════════════
+const SIZE_LABELS = {
+  '300ml': 'Açaí 300ml',
+  '500ml': 'Açaí 500ml',
+  '700ml': 'Açaí 700ml',
+  '1L': 'Açaí 1L'
+};
+
+function renderPrecos() {
+  const tamanhos = ['300ml', '500ml', '700ml', '1L'];
+  const adicionais = Object.keys(ADICIONAL_NAMES);
+
+  const tamanhosEl = document.getElementById('precos-tamanhos');
+  const adicionaisEl = document.getElementById('precos-adicionais');
+
+  if (tamanhosEl) {
+    tamanhosEl.innerHTML = tamanhos.map(key => priceCardHtml(key, SIZE_LABELS[key], 'Tamanho')).join('');
+  }
+
+  if (adicionaisEl) {
+    adicionaisEl.innerHTML = adicionais.map(key => priceCardHtml(key, ADICIONAL_NAMES[key], 'Adicional')).join('');
+  }
+
+  updatePriceLabels();
+}
+
+function priceCardHtml(key, label, tag) {
+  const value = Number(PRICES[key] || 0).toFixed(2);
+  return `<div class="price-card">
+    <div class="price-head">
+      <div class="price-name">${label}</div>
+      <div class="price-tag">${tag}</div>
+    </div>
+    <label class="price-input-wrap">
+      <span>R$</span>
+      <input class="price-input" type="number" min="0" step="0.01" value="${value}" data-price-key="${key}" oninput="previewPreco('${key}', this.value)">
+    </label>
+    <div class="price-preview" id="preview-${key}">Preço atual: ${fmt(Number(PRICES[key] || 0))}</div>
+  </div>`;
+}
+
+function previewPreco(key, value) {
+  const el = document.getElementById('preview-' + key);
+  if (!el) return;
+  const n = parseFloat(value) || 0;
+  el.textContent = 'Novo preço: ' + fmt(n);
+}
+
+function savePrecos() {
+  document.querySelectorAll('[data-price-key]').forEach(input => {
+    const key = input.dataset.priceKey;
+    PRICES[key] = parseFloat(input.value) || 0;
+  });
+
+  saveData('precos', PRICES);
+  updatePriceLabels();
+  calcTotal();
+  calcTroco();
+  renderAll();
+  showToast('Preços atualizados com sucesso!', 'success');
+}
+
+function resetPrecosPadrao() {
+  if (!confirm('Restaurar todos os preços para o padrão?')) return;
+  PRICES = { ...DEFAULT_PRICES };
+  saveData('precos', PRICES);
+  renderAll();
+  showToast('Preços padrão restaurados!', 'success');
+}
+
+function updatePriceLabels() {
+  document.querySelectorAll('.size-btn').forEach(btn => {
+    const key = btn.dataset.size;
+    const price = btn.querySelector('.size-price');
+    if (key && price) price.textContent = fmt(Number(PRICES[key] || 0));
+  });
+
+  document.querySelectorAll('.adicional-btn').forEach(btn => {
+    const key = btn.dataset.ad;
+    const small = btn.querySelector('small');
+    if (key && small) small.textContent = '+' + fmt(Number(PRICES[key] || 0));
+  });
+}
+
+
 function renderAll() {
   renderDashboard();
   renderPedidos();
@@ -2224,6 +2739,7 @@ function renderAll() {
   renderValidades();
   renderCaixa();
   renderRelatorios();
+  renderPrecos();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2251,6 +2767,7 @@ async function initApp() {
   estoque = loadData('estoque', DEFAULT_ESTOQUE);
   despesas = loadData('despesas', []);
   lotesValidade = loadData('lotesValidade', []);
+  PRICES = loadData('precos', DEFAULT_PRICES);
   nextPedidoId = loadData('nextPedidoId', 1);
   nextEstoqueId = loadData('nextEstoqueId', 16);
   nextDespesaId = loadData('nextDespesaId', 1);
